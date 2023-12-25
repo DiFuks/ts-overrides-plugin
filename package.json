@@ -1,0 +1,17 @@
+{
+  "name": "ts-overrides-plugin-sample",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build:plugin": "yarn workspace ts-overrides-plugin build",
+    "watch:plugin": "yarn workspace ts-overrides-plugin watch",
+    "build:tspc": "yarn workspace example tspc",
+    "build:ts-loader": "yarn workspace example build:ts-loader",
+    "build:fork-ts": "yarn workspace example build:fork-ts",
+    "watch:tspc": "yarn workspace example tspc --watch",
+    "watch:ts-loader": "yarn workspace example build:ts-loader --watch",
+    "watch:fork-ts": "yarn workspace example build:fork-ts --watch"
+  },
+  "packageManager": "yarn@4.0.2"
+}

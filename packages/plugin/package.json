@@ -1,0 +1,27 @@
+{
+  "name": "ts-overrides-plugin",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w"
+  },
+  "main": "dist/ide/index.js",
+  "exports": {
+    ".": "./dist/ide/index.js",
+    "./cli": "./dist/cli/index.js"
+  },
+  "dependencies": {
+    "glob": "10.3.10"
+  },
+  "devDependencies": {
+    "@types/node": "20.10.4",
+    "ts-patch": "3.1.1",
+    "typescript": "5.3.3"
+  },
+  "peerDependencies": {
+    "ts-patch": "3.1.1",
+    "typescript": "5.0.0"
+  },
+  "license": "MIT",
+  "packageManager": "yarn@4.0.2"
+}
