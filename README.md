@@ -13,7 +13,7 @@
     yarn build:tspc # ✅ working
     yarn build:ts-loader # ✅ working
     yarn build:fork-ts # ✅ working
-    yarn watch:tspc # ⛔️not working
+    yarn watch:tspc # ⛔️ not working
     yarn watch:ts-loader # ✅ working
-    yarn watch:fork-ts # ⛔️not working
+    yarn watch:fork-ts # ⛔️ not working
     ```
