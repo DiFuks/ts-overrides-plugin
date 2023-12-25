@@ -5,9 +5,6 @@
     "strict": false,
     "noEmit": false,
     "skipLibCheck": true,
-    "paths": {
-        "@/*": ["./src/*"]
-    },
     "plugins": [
       {
         "name": "ts-overrides-plugin",
