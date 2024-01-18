@@ -20,7 +20,7 @@ module.exports = [
         },
         plugins: [new ForkTsCheckerWebpackPlugin({
             typescript: {
-                typescriptPath: 'ts-patch/compiler',
+                typescriptPath: require.resolve('ts-patch/compiler'),
             }
         })],
         resolve: {

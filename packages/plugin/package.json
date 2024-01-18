@@ -1,6 +1,6 @@
 {
   "name": "ts-overrides-plugin",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w"
@@ -11,10 +11,12 @@
     "./cli": "./dist/cli/index.js"
   },
   "dependencies": {
-    "glob": "10.3.10"
+    "glob": "10.3.10",
+    "object-hash": "^3.0.0"
   },
   "devDependencies": {
     "@types/node": "20.10.4",
+    "@types/object-hash": "^3",
     "ts-patch": "3.1.1",
     "typescript": "5.3.3"
   },

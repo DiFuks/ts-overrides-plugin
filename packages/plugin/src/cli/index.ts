@@ -1,85 +1,114 @@
-import type { PluginConfig } from 'ts-patch';
-import fs from 'node:fs';
-import { ProgramTransformerExtras, TransformerPlugin } from 'ts-patch/plugin-types';
-import { globSync } from 'glob';
-import type { CancellationToken, CompilerOptions, Program, SourceFile } from 'typescript';
 import * as path from 'path';
+import type { PluginConfig, ProgramTransformer } from 'ts-patch';
+import type ts from 'typescript';
 
-interface Override {
-  files: string[];
-  compilerOptions: CompilerOptions;
-}
+import { getOverridesWithProgram, Override, OverrideWithProgram } from '../utils/getOverrides';
 
 interface CliPluginConfig extends PluginConfig {
   overrides: Override[];
 }
 
-export default function (program: Program, host: any, pluginConfig: CliPluginConfig, extras: ProgramTransformerExtras): Program {
-  const {overrides} = pluginConfig;
-  const defaultCompilerOptions = program.getCompilerOptions();
-  const rootPath = defaultCompilerOptions.project ? path.dirname(defaultCompilerOptions.project) : process.cwd();
+const getDiagnosticsForProject = (
+  overridesWithProgram: OverrideWithProgram[],
+  overridesFiles: string[],
+  originalDiagnostics: readonly ts.Diagnostic[],
+  cancellationToken?: ts.CancellationToken
+) => {
+  const overridesDiagnostics = overridesWithProgram.flatMap((override) => {
+    cancellationToken?.throwIfCancellationRequested();
 
-  const overridesWithProgram = overrides.map((override) => {
-    const files = globSync(override.files, {
-      cwd: rootPath,
-      absolute: true,
+    return override.files.flatMap((file) => {
+      cancellationToken?.isCancellationRequested();
+
+      const sourceFile = override.program.getSourceFile(file);
+
+      if (!sourceFile) {
+        return [];
+      }
+
+      return override.program.getSemanticDiagnostics(sourceFile);
     });
-
-    return {
-      files,
-      options: {
-        ...defaultCompilerOptions,
-        ...override.compilerOptions,
-      },
-      program: extras.ts.createProgram(files, {
-        ...defaultCompilerOptions,
-        ...override.compilerOptions,
-      }),
-    }
   });
 
-  return new Proxy(program, { get: (target, p, receiver) => {
-    if (p === 'getSemanticDiagnostics') {
-      return (sourceFile: SourceFile, cancellationToken?: CancellationToken) => {
-        const originalDiagnostics = target.getSemanticDiagnostics(sourceFile, cancellationToken);
-
-        // for ForkTsCheckerWebpackPlugin and tspc
-        if (!sourceFile) {
-          const overridesDiagnostics = overridesWithProgram.flatMap((override) => {
-            cancellationToken?.throwIfCancellationRequested();
-
-            return override.files.flatMap((file) => {
-              cancellationToken?.isCancellationRequested();
-
-              const sourceFile = override.program.getSourceFile(file);
-
-              if (!sourceFile) {
-                return [];
-              }
-
-              return override.program.getSemanticDiagnostics(sourceFile);
-            });
-          });
-
-          return [...originalDiagnostics, ...overridesDiagnostics];
-        }
-
-        // for ts-loader
-        const override = overridesWithProgram.find((override) => {
-          return override.files.includes(sourceFile.fileName);
-        });
-
-        if (override) {
-          return override.program.getSemanticDiagnostics(sourceFile);
-        }
-
-        return originalDiagnostics;
-      }
+  const originalDiagnosticsWithoutOverrides = originalDiagnostics.filter((originalDiagnostic) => {
+    if (!originalDiagnostic.file) {
+      return true;
     }
 
+    return !overridesFiles.includes(originalDiagnostic.file.fileName);
+  });
 
-    return target[p as keyof Program];
-  }});
-}
+  return [...originalDiagnosticsWithoutOverrides, ...overridesDiagnostics];
+};
 
+const plugin: ProgramTransformer = (program, _, pluginConfig, extras) => {
+  const { overrides: overridesFromConfig } = pluginConfig as CliPluginConfig;
+  const defaultCompilerOptions = program.getCompilerOptions();
+  const rootPath = defaultCompilerOptions.project
+    ? path.dirname(defaultCompilerOptions.project)
+    : process.cwd();
 
+  const overridesWithProgram = getOverridesWithProgram({
+    overridesFromConfig,
+    rootPath,
+    defaultCompilerOptions,
+    ts: extras.ts,
+  });
+
+  const overridesFiles = overridesWithProgram.flatMap((override) => {
+    return override.files;
+  });
+
+  return new Proxy(program, {
+    get: (target, property) => {
+      // for watch mode - ForkTsCheckerWebpackPlugin and tspc
+      if (property === 'getBindAndCheckDiagnostics') {
+        return (sourceFile: ts.SourceFile, cancellationToken?: ts.CancellationToken) => {
+          // for ts-loader
+          const overrides = overridesWithProgram.find((override) => {
+            return override.files.includes(sourceFile.fileName);
+          });
+
+          if (overrides) {
+            return overrides.program.getBindAndCheckDiagnostics(sourceFile, cancellationToken);
+          }
+
+          return target.getBindAndCheckDiagnostics(sourceFile, cancellationToken);
+        };
+      }
+
+      // for build mode
+      // for watch mode - ts-loader
+      if (property === 'getSemanticDiagnostics') {
+        return (sourceFile: ts.SourceFile, cancellationToken?: ts.CancellationToken) => {
+          // for ForkTsCheckerWebpackPlugin and tspc
+          if (!sourceFile) {
+            const originalDiagnostics = target.getSemanticDiagnostics(sourceFile, cancellationToken);
+
+            return getDiagnosticsForProject(
+              overridesWithProgram,
+              overridesFiles,
+              originalDiagnostics,
+              cancellationToken
+            );
+          }
+
+          // for ts-loader
+          const overrides = overridesWithProgram.find((override) => {
+            return override.files.includes(sourceFile.fileName);
+          });
+
+          if (overrides) {
+            return overrides.program.getSemanticDiagnostics(sourceFile, cancellationToken);
+          }
+
+          return target.getSemanticDiagnostics(sourceFile, cancellationToken);
+        };
+      }
+
+      return target[property as keyof ts.Program];
+    },
+  });
+};
+
+export default plugin;

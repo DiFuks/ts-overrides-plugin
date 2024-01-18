@@ -1,64 +1,46 @@
-import ts from 'typescript/lib/tsserverlibrary';
-import { globSync } from 'glob';
-import path from 'path';
-import fs from 'node:fs';
+import * as path from 'path';
+import type ts from 'typescript/lib/tsserverlibrary';
 
-interface Override {
-  files: string[];
-  compilerOptions: ts.CompilerOptions;
-}
+import { getOverrides, Override } from '../utils/getOverrides';
 
 interface IdePluginConfig {
   overrides: Override[];
 }
 
-function init({ typescript }: { typescript: typeof ts}) {
+const plugin: ts.server.PluginModuleFactory = ({ typescript }) => {
   function create(info: ts.server.PluginCreateInfo) {
-    const { overrides } = info.config as IdePluginConfig;
+    const { overrides: overridesFromConfig } = info.config as IdePluginConfig;
     const defaultCompilerOptions = info.project.getCompilerOptions();
     const rootPath = path.dirname(info.project.getProjectName());
 
-    const overridesWithProgram = overrides.map((override) => {
-      const files = globSync(override.files, {
-        cwd: rootPath,
-        absolute: true,
-      });
-
-      return {
-        files,
-        options: {
-          ...defaultCompilerOptions,
-          ...override.compilerOptions,
-        },
-      }
-    });
+    const overrides = getOverrides({ overridesFromConfig, rootPath, defaultCompilerOptions });
 
     return new Proxy(info.languageService, {
-      get(target, p, receiver): any {
-        if (p === 'getSemanticDiagnostics') {
+      get(target, property) {
+        if (property === 'getSemanticDiagnostics') {
           return (fileName: string) => {
-            const override = overridesWithProgram.find((override) => {
+            const overrideForFile = overrides.find((override) => {
               return override.files.includes(fileName);
             });
 
-            if (override) {
+            if (overrideForFile) {
               const defaultProgram = target.getProgram();
               const sourceFile = defaultProgram?.getSourceFile(fileName);
-              const program = typescript.createProgram([fileName], override.options);
+              const program = typescript.createProgram([fileName], overrideForFile.compilerOptions);
 
               return program.getSemanticDiagnostics(sourceFile);
             }
 
             return target.getSemanticDiagnostics(fileName);
-          }
+          };
         }
 
-        return target[p as keyof ts.LanguageService];
-      }
-    })
+        return target[property as keyof ts.LanguageService];
+      },
+    });
   }
 
   return { create };
-}
+};
 
-export = init;
+export = plugin;

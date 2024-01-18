@@ -1,7 +1,5 @@
 export const getDate = (date) => {
-  const modern: string | undefined = undefined;
-
-  const legacy: number = 3;
+  const modern: string | undefined = 123;
 
   modern.split('');
 

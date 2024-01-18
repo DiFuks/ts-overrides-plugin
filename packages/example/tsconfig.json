@@ -17,6 +17,12 @@
               "strict": true,
             },
           },
+          {
+            "files": ["./src/modern/getDate.ts"],
+            "compilerOptions": {
+              "strictNullChecks": false
+            },
+          }
         ]
       },
     ]
