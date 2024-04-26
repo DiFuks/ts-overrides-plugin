@@ -12,17 +12,11 @@
         "transformProgram": true,
         "overrides": [
           {
-            "files": ["./src/modern/*.{ts,tsx}"],
+            "files": ["src/modern/**/*.{ts,tsx}"],
             "compilerOptions": {
               "strict": true,
             },
           },
-          {
-            "files": ["./src/modern/getDate.ts"],
-            "compilerOptions": {
-              "strictNullChecks": false
-            },
-          }
         ]
       },
     ]

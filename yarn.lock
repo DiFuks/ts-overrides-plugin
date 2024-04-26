@@ -2721,7 +2721,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:10.3.10, glob@npm:^10.2.2, glob@npm:^10.3.10":
+"glob@npm:^10.2.2, glob@npm:^10.3.10":
   version: 10.3.10
   resolution: "glob@npm:10.3.10"
   dependencies:
@@ -3402,10 +3402,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"object-hash@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "object-hash@npm:3.0.0"
-  checksum: a06844537107b960c1c8b96cd2ac8592a265186bfa0f6ccafe0d34eabdb526f6fa81da1f37c43df7ed13b12a4ae3457a16071603bcd39d8beddb5f08c37b0f47
+"outmatch@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "outmatch@npm:1.0.0"
+  checksum: e27d6429f4da07e93d7aa3b4a574665ae5032dce77f0c7b22a1c28881dd870929e9ebb4e5052ccd95eb382c544dae4f1689ac8c0c6480ef0d7ffdc1414bb72e5
   languageName: node
   linkType: hard
 
@@ -4102,8 +4102,7 @@ __metadata:
   dependencies:
     "@types/node": "npm:20.10.4"
     "@types/object-hash": "npm:^3"
-    glob: "npm:10.3.10"
-    object-hash: "npm:^3.0.0"
+    outmatch: "npm:^1.0.0"
     ts-patch: "npm:3.1.1"
     typescript: "npm:5.3.3"
   peerDependencies:

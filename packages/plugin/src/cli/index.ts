@@ -1,112 +1,171 @@
+import outmatch from 'outmatch';
 import * as path from 'path';
 import type { PluginConfig, ProgramTransformer } from 'ts-patch';
-import type ts from 'typescript';
-
-import { getOverridesWithProgram, Override, OverrideWithProgram } from '../utils/getOverrides';
+import ts from 'typescript';
+import { Override } from '../types/Override';
 
 interface CliPluginConfig extends PluginConfig {
   overrides: Override[];
 }
 
-const getDiagnosticsForProject = (
-  overridesWithProgram: OverrideWithProgram[],
-  overridesFiles: string[],
-  originalDiagnostics: readonly ts.Diagnostic[],
-  cancellationToken?: ts.CancellationToken
+const getOverridePrograms = (
+  rootPath: string,
+  typescript: typeof ts,
+  overridesFromConfig: Override[],
+  originalProgram: ts.Program,
+  host?: ts.CompilerHost
 ) => {
-  const overridesDiagnostics = overridesWithProgram.flatMap((override) => {
-    cancellationToken?.throwIfCancellationRequested();
+  let filesToOriginalDiagnostic: string[] = [...originalProgram.getRootFileNames()];
+  const { plugins, ...defaultCompilerOptions } = originalProgram.getCompilerOptions();
 
-    return override.files.flatMap((file) => {
-      cancellationToken?.isCancellationRequested();
+  const sortedOverrides = [...overridesFromConfig].reverse();
 
-      const sourceFile = override.program.getSourceFile(file);
+  const resultOverrides: ts.Program[] = [];
 
-      if (!sourceFile) {
-        return [];
+  for (const override of sortedOverrides) {
+    const isMatch = outmatch(override.files);
+    const filesToCurrentOverrideDiagnostic: string[] = [];
+
+    for (const fileName of filesToOriginalDiagnostic) {
+      const toOverrideDiagnostic = isMatch(path.relative(rootPath, fileName));
+
+      if (toOverrideDiagnostic) {
+        filesToCurrentOverrideDiagnostic.push(fileName);
       }
-
-      return override.program.getSemanticDiagnostics(sourceFile);
-    });
-  });
-
-  const originalDiagnosticsWithoutOverrides = originalDiagnostics.filter((originalDiagnostic) => {
-    if (!originalDiagnostic.file) {
-      return true;
     }
 
-    return !overridesFiles.includes(originalDiagnostic.file.fileName);
-  });
+    const overrideProgram = typescript.createProgram(
+      filesToCurrentOverrideDiagnostic,
+      {
+        ...defaultCompilerOptions,
+        ...override.compilerOptions,
+      },
+      host
+    );
+    resultOverrides.push(overrideProgram);
 
-  return [...originalDiagnosticsWithoutOverrides, ...overridesDiagnostics];
+    filesToOriginalDiagnostic = filesToOriginalDiagnostic.filter(
+      (fileName) => !filesToCurrentOverrideDiagnostic.includes(fileName)
+    );
+  }
+
+  return { resultOverrides, filesToOriginalDiagnostic };
 };
 
-const plugin: ProgramTransformer = (program, _, pluginConfig, extras) => {
+const getDiagnosticsForProject = (
+  overridePrograms: ts.Program[],
+  originalProgram: ts.Program,
+  filesToOriginalDiagnostic: string[],
+  cancellationToken?: ts.CancellationToken
+): ts.Diagnostic[] => {
+  const diagnostics: ts.Diagnostic[] = [];
+  for (const overrideProgram of overridePrograms) {
+    for (const rootFileName of overrideProgram.getRootFileNames()) {
+      const sourceFile = overrideProgram.getSourceFile(rootFileName);
+
+      const diagnosticsForOverride = overrideProgram.getSemanticDiagnostics(
+        sourceFile,
+        cancellationToken
+      );
+
+      diagnostics.push(...diagnosticsForOverride);
+    }
+  }
+
+  for (const rootFileName of filesToOriginalDiagnostic) {
+    if (filesToOriginalDiagnostic.includes(rootFileName)) {
+      const sourceFile = originalProgram.getSourceFile(rootFileName);
+
+      const diagnosticsForOriginal = originalProgram.getSemanticDiagnostics(
+        sourceFile,
+        cancellationToken
+      );
+
+      diagnostics.push(...diagnosticsForOriginal);
+    }
+  }
+
+  return diagnostics;
+};
+
+let overridePrograms: {
+  filesToOriginalDiagnostic: string[];
+  resultOverrides: ts.Program[];
+} | null = null;
+
+const plugin: ProgramTransformer = (program, host, pluginConfig, extras) => {
   const { overrides: overridesFromConfig } = pluginConfig as CliPluginConfig;
-  const defaultCompilerOptions = program.getCompilerOptions();
+  const { plugins, ...defaultCompilerOptions } = program.getCompilerOptions();
   const rootPath = defaultCompilerOptions.project
     ? path.dirname(defaultCompilerOptions.project)
     : process.cwd();
+  overridePrograms = null;
 
-  const overridesWithProgram = getOverridesWithProgram({
-    overridesFromConfig,
-    rootPath,
-    defaultCompilerOptions,
-    ts: extras.ts,
-  });
+  overridePrograms = getOverridePrograms(rootPath, extras.ts, overridesFromConfig, program, host);
 
-  const overridesFiles = overridesWithProgram.flatMap((override) => {
-    return override.files;
-  });
-
+  // Возвращать новую программу без файлов, которые подменяются оверрайдами
   return new Proxy(program, {
-    get: (target, property) => {
-      // for watch mode - ForkTsCheckerWebpackPlugin and tspc
+    get: (target, property: keyof ts.Program) => {
       if (property === 'getBindAndCheckDiagnostics') {
-        return (sourceFile: ts.SourceFile, cancellationToken?: ts.CancellationToken) => {
-          // for ts-loader
-          const overrides = overridesWithProgram.find((override) => {
-            return override.files.includes(sourceFile.fileName);
-          });
+        return ((sourceFile, cancellationToken) => {
+          const { fileName } = sourceFile;
 
-          if (overrides) {
-            return overrides.program.getBindAndCheckDiagnostics(sourceFile, cancellationToken);
+          if (!overridePrograms || overridePrograms.filesToOriginalDiagnostic.includes(fileName)) {
+            return target.getBindAndCheckDiagnostics(sourceFile, cancellationToken);
           }
 
-          return target.getBindAndCheckDiagnostics(sourceFile, cancellationToken);
-        };
+          const overrideProgramForFile = overridePrograms?.resultOverrides.find(
+            (overrideProgram) => {
+              return overrideProgram.getRootFileNames().includes(fileName);
+            }
+          );
+
+          return overrideProgramForFile
+            ? overrideProgramForFile.getBindAndCheckDiagnostics(sourceFile, cancellationToken)
+            : target.getBindAndCheckDiagnostics(sourceFile, cancellationToken);
+        }) as ts.Program['getBindAndCheckDiagnostics'];
       }
 
-      // for build mode
-      // for watch mode - ts-loader
       if (property === 'getSemanticDiagnostics') {
-        return (sourceFile: ts.SourceFile, cancellationToken?: ts.CancellationToken) => {
-          // for ForkTsCheckerWebpackPlugin and tspc
+        return ((sourceFile, cancellationToken) => {
           if (!sourceFile) {
-            const originalDiagnostics = target.getSemanticDiagnostics(sourceFile, cancellationToken);
+            overridePrograms = null;
+
+            const overrideProgramsForBuild = getOverridePrograms(
+              rootPath,
+              extras.ts,
+              overridesFromConfig,
+              target,
+              host
+            );
 
             return getDiagnosticsForProject(
-              overridesWithProgram,
-              overridesFiles,
-              originalDiagnostics,
+              overrideProgramsForBuild.resultOverrides,
+              target,
+              overrideProgramsForBuild.filesToOriginalDiagnostic,
               cancellationToken
             );
           }
 
-          // for ts-loader
-          const overrides = overridesWithProgram.find((override) => {
-            return override.files.includes(sourceFile.fileName);
-          });
+          const { fileName } = sourceFile;
 
-          if (overrides) {
-            return overrides.program.getSemanticDiagnostics(sourceFile, cancellationToken);
+          if (!overridePrograms || overridePrograms.filesToOriginalDiagnostic.includes(fileName)) {
+            return target.getSemanticDiagnostics(sourceFile, cancellationToken);
           }
 
-          return target.getSemanticDiagnostics(sourceFile, cancellationToken);
-        };
+          const overrideProgramForFile = overridePrograms?.resultOverrides.find(
+            (overrideProgram) => {
+              return overrideProgram.getRootFileNames().includes(fileName);
+            }
+          );
+
+          return overrideProgramForFile
+            ? overrideProgramForFile.getSemanticDiagnostics(sourceFile, cancellationToken)
+            : target.getSemanticDiagnostics(sourceFile, cancellationToken);
+        }) as ts.Program['getSemanticDiagnostics'];
       }
 
-      return target[property as keyof ts.Program];
+      return target[property];
     },
   });
 };

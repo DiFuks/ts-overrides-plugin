@@ -9,3 +9,5 @@ export const getDate = (date) => {
     year: 'numeric',
   });
 }
+
+export const someVar: string | undefined = undefined;

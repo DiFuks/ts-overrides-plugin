@@ -11,8 +11,7 @@
     "./cli": "./dist/cli/index.js"
   },
   "dependencies": {
-    "glob": "10.3.10",
-    "object-hash": "^3.0.0"
+    "outmatch": "^1.0.0"
   },
   "devDependencies": {
     "@types/node": "20.10.4",
