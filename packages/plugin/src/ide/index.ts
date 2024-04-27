@@ -1,30 +1,31 @@
-import * as path from 'path';
-
 import outmatch from 'outmatch';
-import ts from 'typescript';
+import * as path from 'path';
+import type ts from 'typescript/lib/tsserverlibrary';
+
 import { Override } from '../types/Override';
 
 interface IdePluginConfig {
   overrides: Override[];
 }
 
-const getOverridePrograms = (
+const getOverrideLanguageServices = (
   typescript: typeof ts,
   overridesFromConfig: Override[],
   languageServiceHost: ts.LanguageServiceHost,
-  docRegistry: ts.DocumentRegistry,
+  docRegistry: ts.DocumentRegistry
 ) => {
   return [...overridesFromConfig].reverse().map((override) => {
-    return typescript.createLanguageService(new Proxy(
-      languageServiceHost,
-      {
+    return typescript.createLanguageService(
+      new Proxy(languageServiceHost, {
         get(target, property: keyof ts.LanguageServiceHost) {
           if (property === 'getScriptFileNames') {
             return (() => {
               const originalFiles = target.getScriptFileNames();
               const isMatch = outmatch(override.files);
 
-              return originalFiles.filter((fileName) => isMatch(path.relative(target.getCurrentDirectory(), fileName)));
+              return originalFiles.filter((fileName) =>
+                isMatch(path.relative(target.getCurrentDirectory(), fileName))
+              );
             }) as ts.LanguageServiceHost['getScriptFileNames'];
           }
 
@@ -39,15 +40,16 @@ const getOverridePrograms = (
 
           return target[property as keyof ts.LanguageServiceHost];
         },
-      }
-    ), docRegistry);
-  })
+      }),
+      docRegistry
+    );
+  });
 };
 
 const getLanguageServiceForFile = (
   fileName: string,
   overrideLanguageServices: ts.LanguageService[],
-  originalLanguageService: ts.LanguageService,
+  originalLanguageService: ts.LanguageService
 ) => {
   const overrideForFile = overrideLanguageServices.find((override) => {
     return override.getProgram()?.getRootFileNames().includes(fileName);
@@ -58,47 +60,58 @@ const getLanguageServiceForFile = (
   }
 
   return originalLanguageService;
-}
+};
 
 const plugin: ts.server.PluginModuleFactory = ({ typescript }) => {
-  function create(info: ts.server.PluginCreateInfo) {
-    const { overrides: overridesFromConfig } = info.config as IdePluginConfig;
+  return {
+    create: (info) => {
+      const { overrides: overridesFromConfig } = info.config as IdePluginConfig;
 
-    const docRegistry = typescript.createDocumentRegistry();
+      const docRegistry = typescript.createDocumentRegistry();
 
-    const overrideLanguageServices = getOverridePrograms(
-      typescript,
-      overridesFromConfig,
-      info.languageServiceHost,
-      docRegistry,
-    );
+      const overrideLanguageServices = getOverrideLanguageServices(
+        typescript,
+        overridesFromConfig,
+        info.languageServiceHost,
+        docRegistry
+      );
 
-    const originalLanguageServiceWithDocRegistry = typescript.createLanguageService(info.languageServiceHost, docRegistry);
+      const originalLanguageServiceWithDocRegistry = typescript.createLanguageService(
+        info.languageServiceHost,
+        docRegistry
+      );
 
-    return new Proxy(originalLanguageServiceWithDocRegistry, {
-      get(target, property: keyof ts.LanguageService) {
-        if (property === 'getQuickInfoAtPosition') {
-          return ((fileName, position) => {
-            const overrideForFile = getLanguageServiceForFile(fileName, overrideLanguageServices, target);
+      return new Proxy(originalLanguageServiceWithDocRegistry, {
+        get(target, property: keyof ts.LanguageService) {
+          if (property === 'getQuickInfoAtPosition') {
+            return ((fileName, position) => {
+              const overrideForFile = getLanguageServiceForFile(
+                fileName,
+                overrideLanguageServices,
+                target
+              );
 
-            return overrideForFile.getQuickInfoAtPosition(fileName, position);
-          }) as ts.LanguageService['getQuickInfoAtPosition'];
-        }
+              return overrideForFile.getQuickInfoAtPosition(fileName, position);
+            }) as ts.LanguageService['getQuickInfoAtPosition'];
+          }
 
-        if (property === 'getSemanticDiagnostics') {
-          return ((fileName) => {
-            const overrideForFile = getLanguageServiceForFile(fileName, overrideLanguageServices, target);
+          if (property === 'getSemanticDiagnostics') {
+            return ((fileName) => {
+              const overrideForFile = getLanguageServiceForFile(
+                fileName,
+                overrideLanguageServices,
+                target
+              );
 
-            return overrideForFile.getSemanticDiagnostics(fileName);
-          }) as ts.LanguageService['getSemanticDiagnostics'];
-        }
+              return overrideForFile.getSemanticDiagnostics(fileName);
+            }) as ts.LanguageService['getSemanticDiagnostics'];
+          }
 
-        return target[property as keyof ts.LanguageService];
-      },
-    });
-  }
-
-  return { create };
+          return target[property as keyof ts.LanguageService];
+        },
+      });
+    },
+  };
 };
 
 export = plugin;
