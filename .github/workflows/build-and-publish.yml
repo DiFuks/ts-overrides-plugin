@@ -15,9 +15,7 @@ jobs:
       # for yarn version check
       - if: github.ref != 'refs/heads/main'
         run: |
-          git fetch --no-tags --depth=1 origin main
-          git checkout main
-          git checkout ${{ github.head_ref || github.ref_name }}
+          git fetch --unshallow origin main
 
       - uses: actions/setup-node@v4
         with:
