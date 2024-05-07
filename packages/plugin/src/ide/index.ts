@@ -47,7 +47,7 @@ const getLanguageServiceForFile = (
 	fileName: string,
 	overrideLanguageServices: ts.LanguageService[],
 	originalLanguageService: ts.LanguageService,
-) => {
+): ts.LanguageService => {
 	const overrideForFile = overrideLanguageServices.find(
 		override => override.getProgram()?.getRootFileNames().includes(fileName),
 	);
