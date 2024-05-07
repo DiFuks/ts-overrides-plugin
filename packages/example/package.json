@@ -3,7 +3,10 @@
   "scripts": {
     "build:tspc": "tspc",
     "build:ts-loader": "webpack --config webpack.config.ts-loader.js",
-    "build:fork-ts": "webpack --config webpack.config.fork-ts.js"
+    "build:fork-ts": "webpack --config webpack.config.fork-ts.js",
+    "watch:tspc": "tspc --watch",
+    "watch:ts-loader": "webpack --config webpack.config.ts-loader.js --watch",
+    "watch:fork-ts": "webpack --config webpack.config.fork-ts.js --watch"
   },
   "devDependencies": {
     "@babel/core": "^7.23.6",

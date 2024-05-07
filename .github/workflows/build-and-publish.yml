@@ -1,0 +1,54 @@
+name: Build and Publish
+
+on: push
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    env:
+      NPM_DIFUKS_TOKEN: ${{ secrets.NPM_DIFUKS_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PERSONAL_TOKEN }}
+
+      # for yarn version check
+      - if: github.ref != 'refs/heads/main'
+        run: |
+          git fetch --no-tags --depth=1 origin main
+          git checkout -b main
+          git checkout ${{ github.event.pull_request.head.sha }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+          cache-dependency-path: yarn.lock
+
+      - name: Install modules
+        run: yarn
+
+      - name: Build plugin
+        run: yarn build:plugin
+
+      - name: Lint plugin
+        run: yarn lint:plugin
+
+      - name: Check packages versions
+        if: github.ref != 'refs/heads/main'
+        run: yarn version check
+
+      - name: Apply versions
+        if: github.ref == 'refs/heads/main'
+        run: yarn version apply
+
+      - name: Publish package
+        if: github.ref == 'refs/heads/main'
+        run: yarn workspace ts-overrides-plugin npm publish --tolerate-republish
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: |
+            ci: Release packages
+            
+            [skip ci]

@@ -1,22 +1,21 @@
-const path = require("path");
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const path = require('path');
 
 module.exports = [
     {
-        mode: "production",
-        entry: "./src/index.ts",
+        mode: 'production',
+        entry: './src/index.ts',
         output: {
-            path: path.join(__dirname, "build"),
-            filename: "main.js",
+            path: path.join(__dirname, 'build'),
+            filename: 'main.js',
         },
         module: {
             rules: [
                 {
                     test: /\.ts$/,
                     exclude: /node_modules/,
-                    loader: "ts-loader",
+                    loader: 'ts-loader',
                     options: {
-                        compiler: 'ts-patch/compiler'
+                        compiler: require.resolve('ts-patch/compiler'),
                     }
                 },
             ],
@@ -24,6 +23,6 @@ module.exports = [
         resolve: {
             extensions: ['.ts', '.js'],
         },
-        target: "web",
+        target: 'web',
     }
 ];

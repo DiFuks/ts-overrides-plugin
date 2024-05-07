@@ -1,28 +1,47 @@
 {
-  "name": "ts-overrides-plugin",
-  "version": "0.0.1",
-  "scripts": {
-    "build": "tsc",
-    "watch": "tsc -w"
-  },
-  "main": "dist/ide/index.js",
-  "exports": {
-    ".": "./dist/ide/index.js",
-    "./cli": "./dist/cli/index.js"
-  },
-  "dependencies": {
-    "outmatch": "^1.0.0"
-  },
-  "devDependencies": {
-    "@types/node": "20.10.4",
-    "@types/object-hash": "^3",
-    "ts-patch": "3.1.1",
-    "typescript": "5.3.3"
-  },
-  "peerDependencies": {
-    "ts-patch": "3.1.1",
-    "typescript": "5.0.0"
-  },
-  "license": "MIT",
-  "packageManager": "yarn@4.0.2"
+	"name": "ts-overrides-plugin",
+	"version": "0.1.0",
+	"repository": "git@github.com:DiFuks/ts-overrides-plugin.git",
+	"homepage": "https://github.com/DiFuks/ts-overrides-plugin",
+	"description": "TypeScript plugin for overriding config for folders",
+	"keywords": [
+		"typescript",
+		"typescript-plugin",
+		"ts-plugin",
+		"ts-overrides"
+	],
+	"files": [
+		"dist",
+		"README.md"
+	],
+	"author": {
+		"name": "Dmitry Fuks",
+		"email": "difuks@gmail.com",
+		"url": "https://github.com/DiFuks"
+	},
+	"scripts": {
+		"build": "tsc",
+		"watch": "tsc -w",
+		"lint": "eslint \"{**/*,*}.{ts,tsx,js,jsx,json}\"",
+		"lint:fix": "eslint \"{**/*,*}.{ts,tsx,js,json}\" --fix"
+	},
+	"main": "./dist/ide/index.js",
+	"dependencies": {
+		"outmatch": "^1.0.0"
+	},
+	"devDependencies": {
+		"@rushstack/eslint-patch": "^1.10.2",
+		"@types/node": "20.10.4",
+		"@types/object-hash": "^3",
+		"eslint": "8.57.0",
+		"eslint-config-fuks": "^2.0.0",
+		"ts-patch": "3.1.1",
+		"typescript": "5.3.3"
+	},
+	"peerDependencies": {
+		"ts-patch": "^3.0.0",
+		"typescript": "^5.0.0"
+	},
+	"license": "MIT",
+	"packageManager": "yarn@4.0.2"
 }
