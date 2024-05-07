@@ -1,6 +1,6 @@
 # ts-overrides-plugin
 
-Плагин для `TypeScript`, который позволяет переопределять `tsconfig` для определенных файлов и папок
+Плагин для `TypeScript`, который позволяет переопределять `tsconfig` для определенных файлов
 
 [![typedoc-theme-hierarchy (latest)](https://img.shields.io/npm/v/ts-overrides-plugin)](https://www.npmjs.com/package/ts-overrides-plugin)
 [![typedoc-theme-hierarchy (downloads)](https://img.shields.io/npm/dw/ts-overrides-plugin)](https://www.npmjs.com/package/ts-overrides-plugin)
@@ -9,7 +9,13 @@
 ## Зачем нужен?
 
 Самый популярный вариант использования – перевод проекта с `strict: false` на `strict: true`, но также подходит для
-любых других случаев, когда нужно переопределить настройки tsconfig для определенных файлов или папок.
+любых других случаев, когда нужно переопределить настройки `tsconfig` для определенных файлов.
+
+## Что умеет?
+
+- Переопределять диагностику для файлов в `IDE`
+- Переопределять подсказки о типах при наведении на переменные в `IDE`
+- Переопределять диагностику для файлов в `webpack`, `tsc` и других сборщиках, где можно использовать `ts-patch`
 
 ## Установка и настройка
 
@@ -78,6 +84,10 @@ yarn add -D ts-overrides-plugin ts-patch
   }
 }
 ```
+
+Если вы используете [`Persistent Patch`](https://github.com/nonara/ts-patch?tab=readme-ov-file#method-2-persistent-patch)
+в `ts-patch`, то больше ничего делать не нужно, если же [`Live Compiler`](https://github.com/nonara/ts-patch?tab=readme-ov-file#method-1-live-compiler), то
+необходимо выполнить следующие действия:
 
 Для команды `tsc` – заменить на `tspc` в `package.json`:
 
