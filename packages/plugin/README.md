@@ -32,6 +32,7 @@ yarn add -D ts-overrides-plugin
 ```json5
 {
   "compilerOptions": {
+    "strict": false, // Настройки по умолчанию
     "plugins": [
       {
         "name": "ts-overrides-plugin",
@@ -41,6 +42,13 @@ yarn add -D ts-overrides-plugin
               "files": ["src/modern/**/*.{ts,tsx}"], // Путь к файлам (glob), для которых нужно переопределить настройки. Не должен начинаться с './'
               "compilerOptions": { // Настройки для этих файлов
                 "strict": true
+              }
+            },
+            {
+              "files": ["src/legacy/**/*.{ts,tsx}"],
+              "compilerOptions": { // Настройки наследуются только от настроек по умолчанию
+                "strict": true,
+                "strictNullChecks": false
               }
             }
           ]
@@ -66,6 +74,7 @@ yarn add -D ts-overrides-plugin ts-patch
 ```json5
 {
   "compilerOptions": {
+    "strict": false, // Настройки по умолчанию
     "plugins": [
       {
         "name": "ts-overrides-plugin",
@@ -78,6 +87,13 @@ yarn add -D ts-overrides-plugin ts-patch
               "strict": true,
             },
           },
+          {
+            "files": ["src/legacy/**/*.{ts,tsx}"],
+            "compilerOptions": { // Настройки наследуются только от настроек по умолчанию
+              "strict": true,
+              "strictNullChecks": false
+            }
+          }
         ]
       }
     ]
