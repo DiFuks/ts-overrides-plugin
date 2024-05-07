@@ -10,13 +10,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2
           token: ${{ secrets.PERSONAL_TOKEN }}
 
-#      # for yarn version check
-#      - if: github.ref != 'refs/heads/main'
-#        run: |
-#          git fetch --unshallow origin main
+      # for yarn version check
+      - if: github.ref != 'refs/heads/main'
+        run: |
+          git fetch origin main
 
       - uses: actions/setup-node@v4
         with:
