@@ -1,2 +1,2 @@
-declined:
-  - ts-overrides-plugin
+releases:
+  ts-overrides-plugin: patch
