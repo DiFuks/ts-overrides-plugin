@@ -26,6 +26,10 @@
 		"lint:fix": "eslint \"{**/*,*}.{ts,tsx,js,json}\" --fix"
 	},
 	"main": "./dist/ide/index.js",
+	"exports": {
+		".": "./dist/ide/index.js",
+		"./cli": "./dist/cli/index.js"
+	},
 	"dependencies": {
 		"outmatch": "^1.0.0"
 	},
@@ -35,8 +39,8 @@
 		"@types/object-hash": "^3",
 		"eslint": "8.57.0",
 		"eslint-config-fuks": "^2.0.0",
-		"ts-patch": "3.1.1",
-		"typescript": "5.3.3"
+		"ts-patch": "3.2.0",
+		"typescript": "5.5.2"
 	},
 	"peerDependencies": {
 		"ts-patch": "^3.0.0",

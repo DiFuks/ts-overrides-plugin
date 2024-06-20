@@ -1,6 +1,7 @@
 export const getDate = (date) => {
-  const modern: string | undefined = 123;
+  const modern: string | undefined = undefined;
 
+  // ok with strict: false
   modern.split('');
 
   return date.toLocaleDateString('ru-RU', {

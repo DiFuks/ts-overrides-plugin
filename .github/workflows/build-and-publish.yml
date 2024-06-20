@@ -32,6 +32,9 @@ jobs:
       - name: Lint plugin
         run: yarn lint:plugin
 
+      - name: Run example
+        run: yarn build:tspc
+
       - name: Check packages versions
         if: github.ref != 'refs/heads/main'
         run: yarn version check
