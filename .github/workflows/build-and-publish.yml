@@ -1,0 +1,89 @@
+name: Build and Publish
+
+on: push
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./packages/plugin
+    env:
+      NPM_DIFUKS_TOKEN: ${{ secrets.NPM_DIFUKS_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PERSONAL_TOKEN }}
+
+      # for yarn version check
+      - if: github.ref != 'refs/heads/main'
+        run: |
+          git fetch --unshallow origin main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+          cache-dependency-path: yarn.lock
+
+      - name: Install modules
+        run: yarn
+
+      - name: Build plugin
+        run: yarn build
+
+      - name: Lint plugin
+        run: yarn lint
+
+      - name: Check packages versions
+        if: github.ref != 'refs/heads/main'
+        run: yarn version check
+
+      - name: Apply versions
+        if: github.ref == 'refs/heads/main'
+        run: yarn version apply
+
+      - name: Publish package
+        if: github.ref == 'refs/heads/main'
+        run: yarn npm publish --tolerate-republish
+
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        if: github.ref == 'refs/heads/main'
+        with:
+          commit_message: |
+            ci: Release packages
+            
+            [skip ci]
+
+      - name: Get package version
+        if: github.ref == 'refs/heads/main'
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+        with:
+          path: packages/plugin
+
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        if: github.ref == 'refs/heads/main'
+        with:
+          tagging_message: v${{ steps.package-version.outputs.current-version }}
+          commit_message: |
+            ci: Release packages
+            
+            [skip ci]
+
+      - name: Get pull request info
+        if: github.ref == 'refs/heads/main'
+        id: pull-request-info
+        uses: actions-ecosystem/action-get-merged-pull-request@v1.0.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: ncipollo/release-action@v1
+        id: create-release
+        if: github.ref == 'refs/heads/main'
+        with:
+          skipIfReleaseExists: true
+          makeLatest: true
+          name: Release ${{ steps.package-version.outputs.current-version }}
+          body: ${{ steps.pull-request-info.outputs.body }}
+          tag: v${{ steps.package-version.outputs.current-version }}

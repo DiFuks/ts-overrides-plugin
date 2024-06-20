@@ -1,6 +1,8 @@
+// ok with strict: false
 export const getDate = (date) => {
-  const modern: string | undefined = 123;
+  const modern: string | undefined = undefined;
 
+  // ok with strict: false
   modern.split('');
 
   return date.toLocaleDateString('ru-RU', {
@@ -10,4 +12,5 @@ export const getDate = (date) => {
   });
 }
 
+// show `string` on hover in IDE
 export const someVar: string | undefined = undefined;
