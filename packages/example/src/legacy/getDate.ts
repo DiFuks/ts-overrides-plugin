@@ -1,3 +1,4 @@
+// ok with strict: false
 export const getDate = (date) => {
   const modern: string | undefined = undefined;
 
@@ -11,4 +12,5 @@ export const getDate = (date) => {
   });
 }
 
+// show `string` on hover in IDE
 export const someVar: string | undefined = undefined;
