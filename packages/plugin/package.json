@@ -40,7 +40,7 @@
 		"eslint": "8.57.0",
 		"eslint-config-fuks": "^2.0.0",
 		"ts-patch": "3.2.0",
-		"typescript": "5.5.2"
+		"typescript": "5.5.1-rc"
 	},
 	"peerDependencies": {
 		"ts-patch": "^3.0.0",
