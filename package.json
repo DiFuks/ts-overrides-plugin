@@ -15,7 +15,7 @@
     "watch:fork-ts": "yarn workspace example watch:fork-ts"
   },
   "devDependencies": {
-    "typescript": "5.2.2"
+    "typescript": "5.5.1-rc"
   },
   "packageManager": "yarn@4.3.0"
 }
