@@ -1,6 +1,6 @@
 {
 	"name": "ts-overrides-plugin",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"repository": "git@github.com:DiFuks/ts-overrides-plugin.git",
 	"homepage": "https://github.com/DiFuks/ts-overrides-plugin",
 	"description": "TypeScript plugin for overriding config for folders",
