@@ -1,6 +1,5 @@
 {
   "name": "example",
-  "type": "module",
   "scripts": {
     "build:tspc": "tspc",
     "build:ts-loader": "webpack --config webpack.config.ts-loader.js",
