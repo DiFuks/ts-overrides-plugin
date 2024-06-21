@@ -24,7 +24,7 @@ const getOverrideProgram = (
 		filesToCurrentOverrideDiagnostic,
 		{
 			...defaultCompilerOptions,
-			...override.compilerOptions,
+			...typescript.convertCompilerOptionsFromJson(override.compilerOptions, rootPath).options,
 		},
 		host,
 	);
