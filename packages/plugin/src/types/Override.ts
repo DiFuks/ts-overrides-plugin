@@ -1,4 +1,4 @@
-import type ts from 'typescript';
+import type ts from 'typescript/lib/tsserverlibrary';
 
 export interface Override {
 	files: string[];

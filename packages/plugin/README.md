@@ -29,6 +29,7 @@ any other cases where you need to override the `tsconfig` settings for specific 
 ## Installation and setup
 
 Examples can be seen in the [`example`](https://github.com/DiFuks/ts-overrides-plugin/tree/main/packages/example) folder.
+Specially for TS4, a separate [`example`](https://github.com/DiFuks/ts-overrides-plugin/tree/main/packages/example-ts4) folder.
 
 ### For using the plugin only in the IDE
 
@@ -111,7 +112,11 @@ In the `tsconfig.json` file, add:
 ```
 
 If you are using [`Persistent Patch`](https://github.com/nonara/ts-patch?tab=readme-ov-file#method-2-persistent-patch)
-with `ts-patch`, then there is nothing more to do. If, however, you are using [`Live Compiler`](https://github.com/nonara/ts-patch?tab=readme-ov-file#method-1-live-compiler), the
+with `ts-patch`, then there is nothing more to do.
+
+For TS4 version, it is possible to use only the Persistent Patch option with [ts-patch version 2.1.0](https://github.com/nonara/ts-patch/tree/v2.1.0).
+
+If, however, you are using [`Live Compiler`](https://github.com/nonara/ts-patch?tab=readme-ov-file#method-1-live-compiler), the
 following steps are necessary:
 
 For the `tsc` command – replace it with `tspc` in `package.json`:
