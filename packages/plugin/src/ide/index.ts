@@ -1,5 +1,5 @@
+import { relative } from 'node:path';
 import outmatch from 'outmatch';
-import { relative } from 'path';
 import type ts from 'typescript/lib/tsserverlibrary';
 
 import { type Override } from '../types/Override';
@@ -25,7 +25,10 @@ const getOverrideLanguageServices = (
 			readFile: (path, encoding) => languageServiceHost.readFile(path, encoding),
 			getCompilationSettings: () => ({
 				...languageServiceHost.getCompilationSettings(),
-				...override.compilerOptions,
+				...typescript.convertCompilerOptionsFromJson(
+					override.compilerOptions,
+					languageServiceHost.getCurrentDirectory(),
+				).options,
 			}),
 			getScriptFileNames: () => {
 				const originalFiles = languageServiceHost.getScriptFileNames();
