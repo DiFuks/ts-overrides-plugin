@@ -1,5 +1,5 @@
 import outmatch from 'outmatch';
-import * as path from 'path';
+import { relative } from 'path';
 import type ts from 'typescript/lib/tsserverlibrary';
 
 import { type Override } from '../types/Override';
@@ -14,34 +14,31 @@ const getOverrideLanguageServices = (
 	languageServiceHost: ts.LanguageServiceHost,
 	docRegistry: ts.DocumentRegistry,
 ): ts.LanguageService[] =>
-	[...overridesFromConfig].reverse().map(override =>
-		typescript.createLanguageService(
-			new Proxy(languageServiceHost, {
-				get: (target, property: keyof ts.LanguageServiceHost) => {
-					if (property === `getScriptFileNames`) {
-						return (() => {
-							const originalFiles = target.getScriptFileNames();
-							const isMatch = outmatch(override.files);
-
-							return originalFiles.filter(fileName =>
-								isMatch(path.relative(target.getCurrentDirectory(), fileName)),
-							);
-						}) as ts.LanguageServiceHost['getScriptFileNames'];
-					}
-
-					if (property === `getCompilationSettings`) {
-						return (() => ({
-							...target.getCompilationSettings(),
-							...override.compilerOptions,
-						})) as ts.LanguageServiceHost['getCompilationSettings'];
-					}
-
-					return target[property as keyof ts.LanguageServiceHost];
-				},
+	[...overridesFromConfig].reverse().map(override => {
+		const overrideLanguageServiceHost: ts.LanguageServiceHost = {
+			fileExists: path => languageServiceHost.fileExists(path),
+			getCurrentDirectory: (): string => languageServiceHost.getCurrentDirectory(),
+			getDefaultLibFileName: (options: ts.CompilerOptions): string =>
+				languageServiceHost.getDefaultLibFileName(options),
+			getScriptSnapshot: fileName => languageServiceHost.getScriptSnapshot(fileName),
+			getScriptVersion: fileName => languageServiceHost.getScriptVersion(fileName),
+			readFile: (path, encoding) => languageServiceHost.readFile(path, encoding),
+			getCompilationSettings: () => ({
+				...languageServiceHost.getCompilationSettings(),
+				...override.compilerOptions,
 			}),
-			docRegistry,
-		),
-	);
+			getScriptFileNames: () => {
+				const originalFiles = languageServiceHost.getScriptFileNames();
+				const isMatch = outmatch(override.files);
+
+				return originalFiles.filter(fileName =>
+					isMatch(relative(languageServiceHost.getCurrentDirectory(), fileName)),
+				);
+			},
+		};
+
+		return typescript.createLanguageService(overrideLanguageServiceHost, docRegistry);
+	});
 
 const getLanguageServiceForFile = (
 	fileName: string,
