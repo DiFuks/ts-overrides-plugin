@@ -8,7 +8,7 @@ A plugin for `TypeScript` that allows overriding `tsconfig` for specific files
 
 ## Why is it needed?
 
-The most popular use case is transitioning a project from `strict: false` to `strict: true`, but it can also be used for
+The most popular use case is migrating a project from `strict: false` to `strict: true`, but it can also be used for
 any other cases where you need to override the `tsconfig` settings for specific files.
 
 ## What can it do?
