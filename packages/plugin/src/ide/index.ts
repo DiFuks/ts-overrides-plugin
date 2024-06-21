@@ -2,7 +2,7 @@ import { relative } from 'node:path';
 import outmatch from 'outmatch';
 import type ts from 'typescript/lib/tsserverlibrary';
 
-import { type Override } from '../types/Override';
+import type { Override } from '../types/Override';
 
 interface IdePluginConfig {
 	overrides: Override[];
@@ -16,13 +16,17 @@ const getOverrideLanguageServices = (
 ): ts.LanguageService[] =>
 	[...overridesFromConfig].reverse().map(override => {
 		const overrideLanguageServiceHost: ts.LanguageServiceHost = {
-			fileExists: path => languageServiceHost.fileExists(path),
+			// don't remove this, it's needed for TS 4
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			fileExists: path => !!languageServiceHost.fileExists?.(path),
 			getCurrentDirectory: (): string => languageServiceHost.getCurrentDirectory(),
 			getDefaultLibFileName: (options: ts.CompilerOptions): string =>
 				languageServiceHost.getDefaultLibFileName(options),
 			getScriptSnapshot: fileName => languageServiceHost.getScriptSnapshot(fileName),
 			getScriptVersion: fileName => languageServiceHost.getScriptVersion(fileName),
-			readFile: (path, encoding) => languageServiceHost.readFile(path, encoding),
+			// don't remove this, it's needed for TS 4
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			readFile: (path, encoding) => languageServiceHost.readFile?.(path, encoding),
 			getCompilationSettings: () => ({
 				...languageServiceHost.getCompilationSettings(),
 				...typescript.convertCompilerOptionsFromJson(

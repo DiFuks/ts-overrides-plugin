@@ -3906,6 +3906,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"example-ts4@workspace:packages/example-ts4":
+  version: 0.0.0-use.local
+  resolution: "example-ts4@workspace:packages/example-ts4"
+  dependencies:
+    "@babel/core": "npm:^7.23.6"
+    "@babel/preset-env": "npm:^7.23.6"
+    "@babel/preset-typescript": "npm:^7.23.3"
+    "@types/babel__core": "npm:^7"
+    "@types/babel__preset-env": "npm:^7"
+    babel-loader: "npm:^9.1.3"
+    fork-ts-checker-webpack-plugin: "npm:^9.0.2"
+    ts-loader: "npm:^9.5.1"
+    ts-node: "npm:^10.9.2"
+    ts-overrides-plugin: "workspce:*"
+    ts-patch: "npm:2.1.0"
+    typescript: "npm:4.2.4"
+    webpack: "npm:^5.89.0"
+    webpack-cli: "npm:^5.1.4"
+  languageName: unknown
+  linkType: soft
+
 "example@workspace:packages/example":
   version: 0.0.0-use.local
   resolution: "example@workspace:packages/example"
@@ -4295,7 +4316,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:^7.1.3":
+"glob@npm:^7.0.0, glob@npm:^7.1.3":
   version: 7.2.3
   resolution: "glob@npm:7.2.3::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fglob%2F-%2Fglob-7.2.3.tgz"
   dependencies:
@@ -4306,6 +4327,19 @@ __metadata:
     once: "npm:^1.3.0"
     path-is-absolute: "npm:^1.0.0"
   checksum: 10c0/65676153e2b0c9095100fe7f25a778bf45608eeb32c6048cf307f579649bcc30353277b3b898a3792602c65764e5baa4f643714dfbdfd64ea271d210c7a425fe
+  languageName: node
+  linkType: hard
+
+"glob@npm:^8.0.3":
+  version: 8.1.0
+  resolution: "glob@npm:8.1.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fglob%2F-%2Fglob-8.1.0.tgz"
+  dependencies:
+    fs.realpath: "npm:^1.0.0"
+    inflight: "npm:^1.0.4"
+    inherits: "npm:2"
+    minimatch: "npm:^5.0.1"
+    once: "npm:^1.3.0"
+  checksum: 10c0/cb0b5cab17a59c57299376abe5646c7070f8acb89df5595b492dba3bfb43d301a46c01e5695f01154e6553168207cb60d4eaf07d3be4bc3eb9b0457c5c561d0f
   languageName: node
   linkType: hard
 
@@ -4575,6 +4609,13 @@ __metadata:
     hasown: "npm:^2.0.0"
     side-channel: "npm:^1.0.4"
   checksum: 10c0/f8b294a4e6ea3855fc59551bbf35f2b832cf01fd5e6e2a97f5c201a071cc09b49048f856e484b67a6c721da5e55736c5b6ddafaf19e2dbeb4a3ff1821680de6c
+  languageName: node
+  linkType: hard
+
+"interpret@npm:^1.0.0":
+  version: 1.4.0
+  resolution: "interpret@npm:1.4.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Finterpret%2F-%2Finterpret-1.4.0.tgz"
+  checksum: 10c0/08c5ad30032edeec638485bc3f6db7d0094d9b3e85e0f950866600af3c52e9fd69715416d29564731c479d9f4d43ff3e4d302a178196bdc0e6837ec147640450
   languageName: node
   linkType: hard
 
@@ -5318,6 +5359,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"minimatch@npm:^5.0.1":
+  version: 5.1.6
+  resolution: "minimatch@npm:5.1.6::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fminimatch%2F-%2Fminimatch-5.1.6.tgz"
+  dependencies:
+    brace-expansion: "npm:^2.0.1"
+  checksum: 10c0/3defdfd230914f22a8da203747c42ee3c405c39d4d37ffda284dac5e45b7e1f6c49aa8be606509002898e73091ff2a3bbfc59c2c6c71d4660609f63aa92f98e3
+  languageName: node
+  linkType: hard
+
 "minimist@npm:^1.2.0, minimist@npm:^1.2.6, minimist@npm:^1.2.8":
   version: 1.2.8
   resolution: "minimist@npm:1.2.8::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fminimist%2F-%2Fminimist-1.2.8.tgz"
@@ -5898,6 +5948,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"rechoir@npm:^0.6.2":
+  version: 0.6.2
+  resolution: "rechoir@npm:0.6.2::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Frechoir%2F-%2Frechoir-0.6.2.tgz"
+  dependencies:
+    resolve: "npm:^1.1.6"
+  checksum: 10c0/22c4bb32f4934a9468468b608417194f7e3ceba9a508512125b16082c64f161915a28467562368eeb15dc16058eb5b7c13a20b9eb29ff9927d1ebb3b5aa83e84
+  languageName: node
+  linkType: hard
+
 "rechoir@npm:^0.8.0":
   version: 0.8.0
   resolution: "rechoir@npm:0.8.0"
@@ -6051,9 +6110,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve@npm:^1.14.2, resolve@npm:^1.20.0":
+"resolve@npm:^1.1.6, resolve@npm:^1.22.1, resolve@npm:^1.22.2, resolve@npm:^1.22.4":
   version: 1.22.8
-  resolution: "resolve@npm:1.22.8"
+  resolution: "resolve@npm:1.22.8::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fresolve%2F-%2Fresolve-1.22.8.tgz"
   dependencies:
     is-core-module: "npm:^2.13.0"
     path-parse: "npm:^1.0.7"
@@ -6064,9 +6123,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve@npm:^1.22.2, resolve@npm:^1.22.4":
+"resolve@npm:^1.14.2, resolve@npm:^1.20.0":
   version: 1.22.8
-  resolution: "resolve@npm:1.22.8::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fresolve%2F-%2Fresolve-1.22.8.tgz"
+  resolution: "resolve@npm:1.22.8"
   dependencies:
     is-core-module: "npm:^2.13.0"
     path-parse: "npm:^1.0.7"
@@ -6090,9 +6149,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve@patch:resolve@npm%3A^1.14.2#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.20.0#optional!builtin<compat/resolve>":
+"resolve@patch:resolve@npm%3A^1.1.6#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.22.1#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.22.2#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.22.4#optional!builtin<compat/resolve>":
   version: 1.22.8
-  resolution: "resolve@patch:resolve@npm%3A1.22.8#optional!builtin<compat/resolve>::version=1.22.8&hash=c3c19d"
+  resolution: "resolve@patch:resolve@npm%3A1.22.8%3A%3A__archiveUrl=https%253A%252F%252Fregistry.npmjs.org%252Fresolve%252F-%252Fresolve-1.22.8.tgz#optional!builtin<compat/resolve>::version=1.22.8&hash=c3c19d"
   dependencies:
     is-core-module: "npm:^2.13.0"
     path-parse: "npm:^1.0.7"
@@ -6103,9 +6162,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve@patch:resolve@npm%3A^1.22.2#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.22.4#optional!builtin<compat/resolve>":
+"resolve@patch:resolve@npm%3A^1.14.2#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.20.0#optional!builtin<compat/resolve>":
   version: 1.22.8
-  resolution: "resolve@patch:resolve@npm%3A1.22.8%3A%3A__archiveUrl=https%253A%252F%252Fregistry.npmjs.org%252Fresolve%252F-%252Fresolve-1.22.8.tgz#optional!builtin<compat/resolve>::version=1.22.8&hash=c3c19d"
+  resolution: "resolve@patch:resolve@npm%3A1.22.8#optional!builtin<compat/resolve>::version=1.22.8&hash=c3c19d"
   dependencies:
     is-core-module: "npm:^2.13.0"
     path-parse: "npm:^1.0.7"
@@ -6318,6 +6377,19 @@ __metadata:
   version: 3.0.0
   resolution: "shebang-regex@npm:3.0.0"
   checksum: 10c0/1dbed0726dd0e1152a92696c76c7f06084eb32a90f0528d11acd764043aacf76994b2fb30aa1291a21bd019d6699164d048286309a278855ee7bec06cf6fb690
+  languageName: node
+  linkType: hard
+
+"shelljs@npm:^0.8.5":
+  version: 0.8.5
+  resolution: "shelljs@npm:0.8.5::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fshelljs%2F-%2Fshelljs-0.8.5.tgz"
+  dependencies:
+    glob: "npm:^7.0.0"
+    interpret: "npm:^1.0.0"
+    rechoir: "npm:^0.6.2"
+  bin:
+    shjs: bin/shjs
+  checksum: 10c0/feb25289a12e4bcd04c40ddfab51aff98a3729f5c2602d5b1a1b95f6819ec7804ac8147ebd8d9a85dfab69d501bcf92d7acef03247320f51c1552cec8d8e2382
   languageName: node
   linkType: hard
 
@@ -6729,10 +6801,29 @@ __metadata:
     ts-patch: "npm:3.2.0"
     typescript: "npm:5.5.1-rc"
   peerDependencies:
-    ts-patch: ^3.0.0
-    typescript: ^5.0.0
+    ts-patch: ^3.0.0 || ^2.0.0
+    typescript: ^5.0.0 || ^4.0.0
   languageName: unknown
   linkType: soft
+
+"ts-patch@npm:2.1.0":
+  version: 2.1.0
+  resolution: "ts-patch@npm:2.1.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fts-patch%2F-%2Fts-patch-2.1.0.tgz"
+  dependencies:
+    chalk: "npm:^4.1.2"
+    glob: "npm:^8.0.3"
+    global-prefix: "npm:^3.0.0"
+    minimist: "npm:^1.2.6"
+    resolve: "npm:^1.22.1"
+    shelljs: "npm:^0.8.5"
+    strip-ansi: "npm:^6.0.1"
+  peerDependencies:
+    typescript: ">=4.0.0"
+  bin:
+    ts-patch: bin/cli.js
+  checksum: 10c0/fb6888807cc7294ea24042519bb520c622ca34c5bc925f70ba35b26c8275ac26d2e78d9642c1885802d444841c9406932292b10a8f7d450ec8d457ba8569a838
+  languageName: node
+  linkType: hard
 
 "ts-patch@npm:3.2.0":
   version: 3.2.0
@@ -6856,6 +6947,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"typescript@npm:4.2.4":
+  version: 4.2.4
+  resolution: "typescript@npm:4.2.4::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Ftypescript%2F-%2Ftypescript-4.2.4.tgz"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 10c0/add3dcc8661784e2959d8411f6a2f1c75b063532aae0112bed4a217f58c0f6da194da6a05bc40dc1b2b171e5c595e88370d5fa97fdb680c47fbb8fab4190e02d
+  languageName: node
+  linkType: hard
+
 "typescript@npm:5.5.1-rc":
   version: 5.5.1-rc
   resolution: "typescript@npm:5.5.1-rc::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Ftypescript%2F-%2Ftypescript-5.5.1-rc.tgz"
@@ -6863,6 +6964,16 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 10c0/c098e0a2c90472003bf5e4cb9548f2298beb7930cfdf65d529a7ca6e688bbf5ee77d00184a9de18921e13022000120740ff56fb109976d09eb4c5202b4cd343b
+  languageName: node
+  linkType: hard
+
+"typescript@patch:typescript@npm%3A4.2.4#optional!builtin<compat/typescript>":
+  version: 4.2.4
+  resolution: "typescript@patch:typescript@npm%3A4.2.4%3A%3A__archiveUrl=https%253A%252F%252Fregistry.npmjs.org%252Ftypescript%252F-%252Ftypescript-4.2.4.tgz#optional!builtin<compat/typescript>::version=4.2.4&hash=334f98"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 10c0/c18a8bba07cbc5918f6224238199af421dd94a08e3342f5af269297ddf69eafe3fbaea560eb81def28382a420617844ee16740cced11895d3f1821943d1b00e7
   languageName: node
   linkType: hard
 

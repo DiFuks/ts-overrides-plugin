@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "outDir": "./dist",
+    "baseUrl": "./src",
+    "strict": false,
+    "noEmit": false,
+    "skipLibCheck": true,
+    "plugins": [
+      {
+        "name": "ts-overrides-plugin",
+        "transform": "ts-overrides-plugin/cli",
+        "transformProgram": true,
+        "overrides": [
+          {
+            "files": ["src/modern/**/*.{ts,tsx}"],
+            "compilerOptions": {
+              "strict": true,
+            },
+          },
+        ]
+      },
+    ]
+  },
+}
