@@ -6,6 +6,7 @@
     "strict": false,
     "noEmit": false,
     "skipLibCheck": true,
+    "typeRoots": [], // A hack to avoid global types that are incompatible with older versions of TS
     "plugins": [
       {
         "name": "ts-overrides-plugin",

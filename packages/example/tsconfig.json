@@ -9,7 +9,7 @@
     "plugins": [
       {
         "name": "ts-overrides-plugin",
-        "transform": "ts-overrides-plugin/cli",
+        "transform": "ts-overrides-plugin",
         "transformProgram": true,
         "overrides": [
           {

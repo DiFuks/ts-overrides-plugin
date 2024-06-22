@@ -29,7 +29,8 @@ any other cases where you need to override the `tsconfig` settings for specific 
 ## Installation and setup
 
 Examples can be seen in the [`example`](https://github.com/DiFuks/ts-overrides-plugin/tree/main/packages/example) folder.
-Specially for TS4, a separate [`example`](https://github.com/DiFuks/ts-overrides-plugin/tree/main/packages/example-ts4) folder.
+Specially for `TS4`, a separate [`example`](https://github.com/DiFuks/ts-overrides-plugin/tree/main/packages/example-ts4) folder.
+Specially for `TS3`, a separate [`example`](https://github.com/DiFuks/ts-overrides-plugin/tree/main/packages/example-ts3) folder.
 
 ### For using the plugin only in the IDE
 
@@ -76,7 +77,9 @@ For the plugin to work correctly in `webpack`, `tsc`, it's necessary to use the 
 Execute in the terminal:
 
 ```bash
-yarn add -D ts-overrides-plugin ts-patch
+yarn add -D ts-overrides-plugin ts-patch # For TS5
+yarn add -D ts-overrides-plugin ts-patch@2.1.0 # For TS4
+yarn add -D ts-overrides-plugin ts-patch@1.4.5 # For TS3
 ```
 
 In the `tsconfig.json` file, add:
@@ -88,7 +91,7 @@ In the `tsconfig.json` file, add:
     "plugins": [
       {
         "name": "ts-overrides-plugin",
-        "transform": "ts-overrides-plugin/cli",
+        "transform": "ts-overrides-plugin",
         "transformProgram": true,
         "overrides": [
           {
@@ -112,12 +115,12 @@ In the `tsconfig.json` file, add:
 ```
 
 If you are using [`Persistent Patch`](https://github.com/nonara/ts-patch?tab=readme-ov-file#method-2-persistent-patch)
-with `ts-patch`, then there is nothing more to do.
+with `ts-patch` (`yarn ts-patch install`), then there is nothing more to do.
 
-For TS4 version, it is possible to use only the Persistent Patch option with [ts-patch version 2.1.0](https://github.com/nonara/ts-patch/tree/v2.1.0).
+For `TypesSript 3` and `TypesSript 4` version, it is possible to use only the Persistent Patch option with.
 
-If, however, you are using [`Live Compiler`](https://github.com/nonara/ts-patch?tab=readme-ov-file#method-1-live-compiler), the
-following steps are necessary:
+If, however, you are using [`Live Compiler`](https://github.com/nonara/ts-patch?tab=readme-ov-file#method-1-live-compiler) (Only `TypeScript 5`,
+the following steps are necessary:
 
 For the `tsc` command – replace it with `tspc` in `package.json`:
 

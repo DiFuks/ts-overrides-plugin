@@ -25,11 +25,7 @@
 		"lint": "eslint \"{**/*,*}.{ts,tsx,js,jsx,json}\"",
 		"lint:fix": "eslint \"{**/*,*}.{ts,tsx,js,json}\" --fix"
 	},
-	"main": "./dist/ide/index.js",
-	"exports": {
-		".": "./dist/ide/index.js",
-		"./cli": "./dist/cli/index.js"
-	},
+	"main": "./dist/index.js",
 	"dependencies": {
 		"outmatch": "^1.0.0"
 	},

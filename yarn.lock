@@ -3906,6 +3906,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"example-ts3@workspace:packages/example-ts3":
+  version: 0.0.0-use.local
+  resolution: "example-ts3@workspace:packages/example-ts3"
+  dependencies:
+    "@babel/core": "npm:^7.23.6"
+    "@babel/preset-env": "npm:^7.23.6"
+    "@babel/preset-typescript": "npm:^7.23.3"
+    "@types/babel__core": "npm:^7"
+    "@types/babel__preset-env": "npm:^7"
+    babel-loader: "npm:^9.1.3"
+    fork-ts-checker-webpack-plugin: "npm:^9.0.2"
+    ts-loader: "npm:^9.5.1"
+    ts-node: "npm:^10.9.2"
+    ts-overrides-plugin: "workspce:*"
+    ts-patch: "npm:1.4.5"
+    typescript: "npm:3.9.10"
+    webpack: "npm:^5.89.0"
+    webpack-cli: "npm:^5.1.4"
+  languageName: unknown
+  linkType: soft
+
 "example-ts4@workspace:packages/example-ts4":
   version: 0.0.0-use.local
   resolution: "example-ts4@workspace:packages/example-ts4"
@@ -4316,7 +4337,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:^7.0.0, glob@npm:^7.1.3":
+"glob@npm:^7.0.0, glob@npm:^7.1.3, glob@npm:^7.1.7":
   version: 7.2.3
   resolution: "glob@npm:7.2.3::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fglob%2F-%2Fglob-7.2.3.tgz"
   dependencies:
@@ -5368,7 +5389,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimist@npm:^1.2.0, minimist@npm:^1.2.6, minimist@npm:^1.2.8":
+"minimist@npm:^1.2.0, minimist@npm:^1.2.5, minimist@npm:^1.2.6, minimist@npm:^1.2.8":
   version: 1.2.8
   resolution: "minimist@npm:1.2.8::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fminimist%2F-%2Fminimist-1.2.8.tgz"
   checksum: 10c0/19d3fcdca050087b84c2029841a093691a91259a47def2f18222f41e7645a0b7c44ef4b40e88a1e58a40c84d2ef0ee6047c55594d298146d0eb3f6b737c20ce6
@@ -6380,7 +6401,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"shelljs@npm:^0.8.5":
+"shelljs@npm:^0.8.4, shelljs@npm:^0.8.5":
   version: 0.8.5
   resolution: "shelljs@npm:0.8.5::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fshelljs%2F-%2Fshelljs-0.8.5.tgz"
   dependencies:
@@ -6806,6 +6827,25 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"ts-patch@npm:1.4.5":
+  version: 1.4.5
+  resolution: "ts-patch@npm:1.4.5::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fts-patch%2F-%2Fts-patch-1.4.5.tgz"
+  dependencies:
+    chalk: "npm:^4.1.0"
+    glob: "npm:^7.1.7"
+    global-prefix: "npm:^3.0.0"
+    minimist: "npm:^1.2.5"
+    resolve: "npm:^1.20.0"
+    shelljs: "npm:^0.8.4"
+    strip-ansi: "npm:^6.0.0"
+  peerDependencies:
+    typescript: ">2.7.0"
+  bin:
+    ts-patch: bin/cli.js
+  checksum: 10c0/3e9b0d3838d0fc930f89000206c586485582c7f7f2746f1e4227a6777b10c06c7642395cd88cbd2950a3938da4146d4e8a1fbe0e02f46624764b9d42a01d7470
+  languageName: node
+  linkType: hard
+
 "ts-patch@npm:2.1.0":
   version: 2.1.0
   resolution: "ts-patch@npm:2.1.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fts-patch%2F-%2Fts-patch-2.1.0.tgz"
@@ -6947,6 +6987,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"typescript@npm:3.9.10":
+  version: 3.9.10
+  resolution: "typescript@npm:3.9.10::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Ftypescript%2F-%2Ftypescript-3.9.10.tgz"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 10c0/863cc06070fa18a0f9c6a83265fb4922a8b51bf6f2c6760fb0b73865305ce617ea4bc6477381f9f4b7c3a8cb4a455b054f5469e6e41307733fe6a2bd9aae82f8
+  languageName: node
+  linkType: hard
+
 "typescript@npm:4.2.4":
   version: 4.2.4
   resolution: "typescript@npm:4.2.4::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Ftypescript%2F-%2Ftypescript-4.2.4.tgz"
@@ -6964,6 +7014,16 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 10c0/c098e0a2c90472003bf5e4cb9548f2298beb7930cfdf65d529a7ca6e688bbf5ee77d00184a9de18921e13022000120740ff56fb109976d09eb4c5202b4cd343b
+  languageName: node
+  linkType: hard
+
+"typescript@patch:typescript@npm%3A3.9.10#optional!builtin<compat/typescript>":
+  version: 3.9.10
+  resolution: "typescript@patch:typescript@npm%3A3.9.10%3A%3A__archiveUrl=https%253A%252F%252Fregistry.npmjs.org%252Ftypescript%252F-%252Ftypescript-3.9.10.tgz#optional!builtin<compat/typescript>::version=3.9.10&hash=3bd3d3"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 10c0/9041fb3886e7d6a560f985227b8c941d17a750f2edccb5f9b3a15a2480574654d9be803ad4a14aabcc2f2553c4d272a25fd698a7c42692f03f66b009fb46883c
   languageName: node
   linkType: hard
 
