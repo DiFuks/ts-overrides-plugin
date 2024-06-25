@@ -40,8 +40,8 @@
 		"typescript": "5.5.1-rc"
 	},
 	"peerDependencies": {
-		"ts-patch": "^3.0.0 || ^2.0.0",
-		"typescript": "^5.0.0 || ^4.0.0"
+		"ts-patch": "^3.0.0 || ^2.0.0 || ^1.0.0",
+		"typescript": ">=5.5.1 || ^4.0.0"
 	},
 	"license": "MIT",
 	"packageManager": "yarn@4.0.2"
