@@ -6822,8 +6822,8 @@ __metadata:
     ts-patch: "npm:3.2.0"
     typescript: "npm:5.5.1-rc"
   peerDependencies:
-    ts-patch: ^3.0.0 || ^2.0.0
-    typescript: ^5.0.0 || ^4.0.0
+    ts-patch: ^3.0.0 || ^2.0.0 || ^1.0.0
+    typescript: ">=5.5.1 || ^4.0.0"
   languageName: unknown
   linkType: soft
 
