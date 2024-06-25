@@ -8,6 +8,8 @@ A plugin for `TypeScript` that allows overriding `tsconfig` for specific files
 
 ## Why is it needed?
 
+The plugin partially addresses [this issue](https://github.com/microsoft/TypeScript/issues/33407).
+
 The most popular use case is migrating a project from `strict: false` to `strict: true`, but it can also be used for
 any other cases where you need to override the `tsconfig` settings for specific files.
 
@@ -120,7 +122,7 @@ with `ts-patch` (`yarn ts-patch install`), then there is nothing more to do.
 For `TypesSript 3` and `TypesSript 4` version, it is possible to use only the Persistent Patch option with.
 
 If, however, you are using [`Live Compiler`](https://github.com/nonara/ts-patch?tab=readme-ov-file#method-1-live-compiler) (Only `TypeScript 5`,
-the following steps are necessary:
+the following steps are necessary):
 
 For the `tsc` command – replace it with `tspc` in `package.json`:
 
