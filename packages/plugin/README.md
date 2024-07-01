@@ -23,7 +23,7 @@ any other cases where you need to override the `tsconfig` settings for specific 
 ## Known issues
 
 - Paths in `tsconfig` should not start with `./`
-- The plugin does not work in `WebStorm` when using `yarn pnp`
+- The plugin does not work in `WebStorm` when using `yarn pnp` ([see issue](https://youtrack.jetbrains.com/issue/WEB-67907/TypeScript-plugins-do-not-work-with-yarn-pnp))
 - Some issues may be caused by incompatibility of the latest TypeScript version with ts-patch. For example: [issue](https://github.com/nonara/ts-patch/issues/152), [issue](https://github.com/nonara/ts-patch/issues/140), [issue](https://github.com/nonara/ts-patch/issues/159)
 - Memory leaks are possible with a very large number of files (> 3000)
 
