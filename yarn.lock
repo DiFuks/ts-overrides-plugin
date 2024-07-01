@@ -3962,8 +3962,8 @@ __metadata:
     ts-loader: "npm:^9.5.1"
     ts-node: "npm:^10.9.2"
     ts-overrides-plugin: "workspce:*"
-    ts-patch: "npm:3.2.0"
-    typescript: "npm:5.5.1-rc"
+    ts-patch: "npm:3.2.1"
+    typescript: "npm:5.5.2"
     webpack: "npm:^5.89.0"
     webpack-cli: "npm:^5.1.4"
   languageName: unknown
@@ -6819,11 +6819,11 @@ __metadata:
     eslint: "npm:8.57.0"
     eslint-config-fuks: "npm:^2.0.0"
     outmatch: "npm:^1.0.0"
-    ts-patch: "npm:3.2.0"
-    typescript: "npm:5.5.1-rc"
+    ts-patch: "npm:3.2.1"
+    typescript: "npm:5.5.2"
   peerDependencies:
     ts-patch: ^3.0.0 || ^2.0.0 || ^1.0.0
-    typescript: <=5.5.1 || ^4.0.0 || ^3.0.0
+    typescript: ^5.5.2 || ^4.0.0 || ^3.0.0
   languageName: unknown
   linkType: soft
 
@@ -6865,9 +6865,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-patch@npm:3.2.0":
-  version: 3.2.0
-  resolution: "ts-patch@npm:3.2.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fts-patch%2F-%2Fts-patch-3.2.0.tgz"
+"ts-patch@npm:3.2.1":
+  version: 3.2.1
+  resolution: "ts-patch@npm:3.2.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fts-patch%2F-%2Fts-patch-3.2.1.tgz"
   dependencies:
     chalk: "npm:^4.1.2"
     global-prefix: "npm:^3.0.0"
@@ -6878,7 +6878,7 @@ __metadata:
   bin:
     ts-patch: bin/ts-patch.js
     tspc: bin/tspc.js
-  checksum: 10c0/fc7436fd60f5793da13dddde376fff36d86f65fb70dde4410fe9de3d9c137770f47acf0431830336bec7390e64c754ae49500390a57b58982add87f31e54558f
+  checksum: 10c0/c214e0218f905c6445830821d400280c9b127fa41f2984bbad59c1f19eda7b6a0529457af7bc6d80fdfa38289207d5b5e2f40912c33758a243ca2064ed0aa137
   languageName: node
   linkType: hard
 
@@ -7007,13 +7007,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:5.5.1-rc":
-  version: 5.5.1-rc
-  resolution: "typescript@npm:5.5.1-rc::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Ftypescript%2F-%2Ftypescript-5.5.1-rc.tgz"
+"typescript@npm:5.5.2":
+  version: 5.5.2
+  resolution: "typescript@npm:5.5.2::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Ftypescript%2F-%2Ftypescript-5.5.2.tgz"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10c0/c098e0a2c90472003bf5e4cb9548f2298beb7930cfdf65d529a7ca6e688bbf5ee77d00184a9de18921e13022000120740ff56fb109976d09eb4c5202b4cd343b
+  checksum: 10c0/8ca39b27b5f9bd7f32db795045933ab5247897660627251e8254180b792a395bf061ea7231947d5d7ffa5cb4cc771970fd4ef543275f9b559f08c9325cccfce3
   languageName: node
   linkType: hard
 
@@ -7037,13 +7037,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A5.5.1-rc#optional!builtin<compat/typescript>":
-  version: 5.5.1-rc
-  resolution: "typescript@patch:typescript@npm%3A5.5.1-rc%3A%3A__archiveUrl=https%253A%252F%252Fregistry.npmjs.org%252Ftypescript%252F-%252Ftypescript-5.5.1-rc.tgz#optional!builtin<compat/typescript>::version=5.5.1-rc&hash=b45daf"
+"typescript@patch:typescript@npm%3A5.5.2#optional!builtin<compat/typescript>":
+  version: 5.5.2
+  resolution: "typescript@patch:typescript@npm%3A5.5.2%3A%3A__archiveUrl=https%253A%252F%252Fregistry.npmjs.org%252Ftypescript%252F-%252Ftypescript-5.5.2.tgz#optional!builtin<compat/typescript>::version=5.5.2&hash=b45daf"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10c0/2bdee8341050466230dfd9c2202981062bbf50644d40452e8d164b5e8daa85a53bffc60ebca21d3d984fe2b752c63fcca33a7ddac67acf0d609ccab5b34847e0
+  checksum: 10c0/6721ac8933a70c252d7b640b345792e103d881811ff660355617c1836526dbb71c2044e2e77a8823fb3570b469f33276875a4cab6d3c4de4ae7d7ee1c3074ae4
   languageName: node
   linkType: hard
 
