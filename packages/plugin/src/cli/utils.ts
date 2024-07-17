@@ -33,38 +33,17 @@ const getOverrideProgram = (
 };
 
 export const getDiagnosticsForProject = (
-	rootPath: string,
-	typescript: typeof ts,
-	overridesFromConfig: Override[],
 	program: ts.Program,
-	defaultCompilerOptions: ts.CompilerOptions,
+	overridePrograms: OverridePrograms,
 	cancellationToken?: ts.CancellationToken,
-	host?: ts.CompilerHost,
 ): ts.Diagnostic[] => {
-	let filesToOriginalDiagnostic: string[] = [...program.getRootFileNames()];
+	const resultDiagnostic: ts.Diagnostic[] = overridePrograms.resultOverrides.flatMap(override =>
+		override
+			.getRootFileNames()
+			.flatMap(fileName => override.getSemanticDiagnostics(override.getSourceFile(fileName), cancellationToken)),
+	);
 
-	const resultDiagnostic: ts.Diagnostic[] = overridesFromConfig.flatMap(override => {
-		const { overrideProgram, filesToCurrentOverrideDiagnostic } = getOverrideProgram(
-			rootPath,
-			typescript,
-			override,
-			filesToOriginalDiagnostic,
-			defaultCompilerOptions,
-			host,
-		);
-
-		filesToOriginalDiagnostic = filesToOriginalDiagnostic.filter(
-			fileName => !filesToCurrentOverrideDiagnostic.includes(fileName),
-		);
-
-		return filesToCurrentOverrideDiagnostic.flatMap(fileName => {
-			const sourceFile = overrideProgram.getSourceFile(fileName);
-
-			return sourceFile ? overrideProgram.getSemanticDiagnostics(sourceFile, cancellationToken) : [];
-		});
-	});
-
-	const originalDiagnostics = filesToOriginalDiagnostic.flatMap(fileName => {
+	const originalDiagnostics = overridePrograms.filesToOriginalDiagnostic.flatMap(fileName => {
 		const sourceFile = program.getSourceFile(fileName);
 
 		return sourceFile ? program.getSemanticDiagnostics(sourceFile, cancellationToken) : [];
@@ -112,7 +91,7 @@ export interface OverridePrograms {
 }
 
 export const getDiagnosticForFile = (
-	overridePrograms: OverridePrograms | null,
+	overridePrograms: OverridePrograms,
 	target: ts.Program,
 	sourceFile: ts.SourceFile,
 	method: 'getSemanticDiagnostics' | 'getBindAndCheckDiagnostics',
@@ -120,7 +99,7 @@ export const getDiagnosticForFile = (
 ): readonly ts.Diagnostic[] => {
 	const { fileName } = sourceFile;
 
-	if (!overridePrograms || overridePrograms.filesToOriginalDiagnostic.includes(fileName)) {
+	if (overridePrograms.filesToOriginalDiagnostic.includes(fileName)) {
 		return target[method](sourceFile, cancellationToken);
 	}
 

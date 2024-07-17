@@ -3,13 +3,11 @@ import type { PluginConfig, ProgramTransformer } from 'ts-patch';
 import type ts from 'typescript';
 
 import { type Override } from '../types/Override';
-import { getDiagnosticForFile, getDiagnosticsForProject, getOverridePrograms, type OverridePrograms } from './utils';
+import { getDiagnosticForFile, getDiagnosticsForProject, getOverridePrograms } from './utils';
 
 interface CliPluginConfig extends PluginConfig {
 	overrides: Override[];
 }
-
-let overridePrograms: OverridePrograms | null = null;
 
 const plugin: ProgramTransformer = (program, host, pluginConfig, extras) => {
 	const { overrides: overridesFromConfig } = pluginConfig as CliPluginConfig;
@@ -17,9 +15,7 @@ const plugin: ProgramTransformer = (program, host, pluginConfig, extras) => {
 	const sortedOverridesFromConfig = [...overridesFromConfig].reverse();
 	const rootPath = defaultCompilerOptions.project ? path.dirname(defaultCompilerOptions.project) : process.cwd();
 
-	overridePrograms = null;
-
-	overridePrograms = getOverridePrograms(
+	const overridePrograms = getOverridePrograms(
 		rootPath,
 		extras.ts,
 		sortedOverridesFromConfig,
@@ -48,17 +44,7 @@ const plugin: ProgramTransformer = (program, host, pluginConfig, extras) => {
 				return ((sourceFile, cancellationToken) => {
 					// for build ForkTsCheckerWebpackPlugin and tspc
 					if (!sourceFile) {
-						overridePrograms = null;
-
-						return getDiagnosticsForProject(
-							rootPath,
-							extras.ts,
-							sortedOverridesFromConfig,
-							target,
-							defaultCompilerOptions,
-							cancellationToken,
-							host,
-						);
+						return getDiagnosticsForProject(target, overridePrograms, cancellationToken);
 					}
 
 					// for ts-loader - watch and build
