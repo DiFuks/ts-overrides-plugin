@@ -48,8 +48,7 @@ In the `tsconfig.json` file, add:
     "plugins": [
       {
         "name": "ts-overrides-plugin",
-        "config": {
-          "overrides": [
+        "overrides": [
             {
               "files": ["src/modern/**/*.{ts,tsx}"], // Path to files (glob) for which settings need to be overridden. Should not start with './'
               "compilerOptions": { // Settings for these files
@@ -63,8 +62,7 @@ In the `tsconfig.json` file, add:
                 "strictNullChecks": false
               }
             }
-          ]
-        }
+        ]
       }
     ]
   }
