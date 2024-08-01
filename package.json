@@ -14,5 +14,5 @@
     "watch:ts-loader": "yarn workspace example watch:ts-loader",
     "watch:fork-ts": "yarn workspace example watch:fork-ts"
   },
-  "packageManager": "yarn@4.3.0"
+  "packageManager": "yarn@4.3.1"
 }
