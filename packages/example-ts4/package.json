@@ -10,7 +10,7 @@
     "prepare": "ts-patch install -s"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.6",
+    "@babel/core": "^7.25.8",
     "@babel/preset-env": "^7.23.6",
     "@babel/preset-typescript": "^7.23.3",
     "@types/babel__core": "^7",
