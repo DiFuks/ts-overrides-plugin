@@ -15,7 +15,7 @@
     "@babel/preset-typescript": "^7.23.3",
     "@types/babel__core": "^7",
     "@types/babel__preset-env": "^7",
-    "babel-loader": "^9.1.3",
+    "babel-loader": "^9.2.1",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
