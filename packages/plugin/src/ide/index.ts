@@ -11,35 +11,29 @@ interface IdePluginConfig {
 const getOverrideLanguageServices = (
 	typescript: typeof ts,
 	overridesFromConfig: Override[],
-	languageServiceHost: ts.LanguageServiceHost,
+	project: ts.server.Project,
 	docRegistry: ts.DocumentRegistry,
 ): ts.LanguageService[] =>
 	[...overridesFromConfig].reverse().map(override => {
 		const overrideLanguageServiceHost: ts.LanguageServiceHost = {
-			// don't remove this, it's needed for TS 4
-			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-			fileExists: path => !!languageServiceHost.fileExists?.(path),
-			getCurrentDirectory: (): string => languageServiceHost.getCurrentDirectory(),
-			getDefaultLibFileName: (options: ts.CompilerOptions): string =>
-				languageServiceHost.getDefaultLibFileName(options),
-			getScriptSnapshot: fileName => languageServiceHost.getScriptSnapshot(fileName),
-			getScriptVersion: fileName => languageServiceHost.getScriptVersion(fileName),
-			// don't remove this, it's needed for TS 4
-			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-			readFile: (path, encoding) => languageServiceHost.readFile?.(path, encoding),
+			fileExists: path => project.fileExists(path),
+			getCurrentDirectory: () => project.getCurrentDirectory(),
+			getDefaultLibFileName: () => project.getDefaultLibFileName(),
+			getScriptSnapshot: fileName => project.getScriptSnapshot(fileName),
+			getScriptVersion: fileName => project.getScriptVersion(fileName),
+			readFile: path => project.readFile(path),
 			getCompilationSettings: () => ({
-				...languageServiceHost.getCompilationSettings(),
-				...typescript.convertCompilerOptionsFromJson(
-					override.compilerOptions,
-					languageServiceHost.getCurrentDirectory(),
-				).options,
+				...project.getCompilationSettings(),
+				...typescript.convertCompilerOptionsFromJson(override.compilerOptions, project.getCurrentDirectory())
+					.options,
 			}),
 			getScriptFileNames: () => {
-				const originalFiles = languageServiceHost.getScriptFileNames();
+				const originalFiles = project.getScriptFileNames();
 				const isMatch = outmatch(override.files);
 
-				return originalFiles.filter(fileName =>
-					isMatch(relative(languageServiceHost.getCurrentDirectory(), fileName)),
+				return originalFiles.filter(
+					fileName =>
+						fileName.endsWith(`.d.ts`) || isMatch(relative(project.getCurrentDirectory(), fileName)),
 				);
 			},
 		};
@@ -72,14 +66,11 @@ const plugin: ts.server.PluginModuleFactory = ({ typescript }) => ({
 		const overrideLanguageServices = getOverrideLanguageServices(
 			typescript,
 			overridesFromConfig,
-			info.languageServiceHost,
+			info.project,
 			docRegistry,
 		);
 
-		const originalLanguageServiceWithDocRegistry = typescript.createLanguageService(
-			info.languageServiceHost,
-			docRegistry,
-		);
+		const originalLanguageServiceWithDocRegistry = typescript.createLanguageService(info.project, docRegistry);
 
 		return new Proxy(originalLanguageServiceWithDocRegistry, {
 			get: (target, property: keyof ts.LanguageService) => {

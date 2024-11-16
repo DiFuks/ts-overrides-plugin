@@ -5,6 +5,9 @@ export const getDate = (date) => {
   // ok with strict: false
   modern.split('');
 
+  // 'GLOBAL_VAR' not nullable
+  GLOBAL_VAR.toLowerCase();
+
   return date.toLocaleDateString('ru-RU', {
     day: 'numeric',
     month: 'long',
