@@ -21,7 +21,7 @@
     "ts-overrides-plugin": "workspce:*",
     "ts-patch": "3.2.1",
     "typescript": "5.5.2",
-    "webpack": "^5.89.0",
+    "webpack": "^5.96.1",
     "webpack-cli": "^5.1.4"
   },
   "packageManager": "yarn@4.0.2"
