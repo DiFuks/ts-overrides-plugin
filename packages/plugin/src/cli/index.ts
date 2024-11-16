@@ -6,7 +6,8 @@ import type ts from 'typescript';
 import { type Override } from '../types/Override';
 
 interface CliPluginConfig extends PluginConfig {
-	overrides: Override[];
+	overrides?: Override[];
+	ignores?: string[];
 }
 
 export const getOverridePrograms = (
@@ -41,8 +42,13 @@ export const getDiagnosticForFile = (
 	target: ts.Program,
 	sourceFile: ts.SourceFile,
 	method: 'getSemanticDiagnostics' | 'getBindAndCheckDiagnostics',
+	ignoreMatcher: ((fileName: string) => boolean) | null,
 	cancellationToken?: ts.CancellationToken,
 ): readonly ts.Diagnostic[] => {
+	if (ignoreMatcher?.(sourceFile.fileName)) {
+		return [];
+	}
+
 	const { fileName } = sourceFile;
 
 	const overrideProgramForFile = overridePrograms.find(overrideProgram =>
@@ -57,19 +63,28 @@ export const getDiagnosticForFile = (
 export const getDiagnosticsForProject = (
 	program: ts.Program,
 	overridePrograms: ts.Program[],
+	ignoreMatcher: ((fileName: string) => boolean) | null,
 	cancellationToken?: ts.CancellationToken,
 ): ts.Diagnostic[] =>
 	program
 		.getSourceFiles()
 		.flatMap(sourceFile =>
-			getDiagnosticForFile(overridePrograms, program, sourceFile, `getSemanticDiagnostics`, cancellationToken),
+			getDiagnosticForFile(
+				overridePrograms,
+				program,
+				sourceFile,
+				`getSemanticDiagnostics`,
+				ignoreMatcher,
+				cancellationToken,
+			),
 		);
 
 const plugin: ProgramTransformer = (program, host, pluginConfig, extras) => {
-	const { overrides: overridesFromConfig } = pluginConfig as CliPluginConfig;
+	const { overrides: overridesFromConfig = [], ignores } = pluginConfig as CliPluginConfig;
 	const { plugins, ...defaultCompilerOptions } = program.getCompilerOptions();
 	const sortedOverridesFromConfig = [...overridesFromConfig].reverse();
 	const rootPath = defaultCompilerOptions.project ? path.dirname(defaultCompilerOptions.project) : process.cwd();
+	const ignoreMatcher = ignores ? (fileName: string) => outmatch(ignores)(path.relative(rootPath, fileName)) : null;
 
 	const overridePrograms = getOverridePrograms(
 		rootPath,
@@ -90,6 +105,7 @@ const plugin: ProgramTransformer = (program, host, pluginConfig, extras) => {
 						target,
 						sourceFile,
 						`getBindAndCheckDiagnostics`,
+						ignoreMatcher,
 						cancellationToken,
 					)) as ts.Program['getBindAndCheckDiagnostics'];
 			}
@@ -100,7 +116,7 @@ const plugin: ProgramTransformer = (program, host, pluginConfig, extras) => {
 				return ((sourceFile, cancellationToken) => {
 					// for build ForkTsCheckerWebpackPlugin and tspc
 					if (!sourceFile) {
-						return getDiagnosticsForProject(target, overridePrograms, cancellationToken);
+						return getDiagnosticsForProject(target, overridePrograms, ignoreMatcher, cancellationToken);
 					}
 
 					// for ts-loader - watch and build
@@ -109,6 +125,7 @@ const plugin: ProgramTransformer = (program, host, pluginConfig, extras) => {
 						target,
 						sourceFile,
 						`getSemanticDiagnostics`,
+						ignoreMatcher,
 						cancellationToken,
 					);
 				}) as ts.Program['getSemanticDiagnostics'];
