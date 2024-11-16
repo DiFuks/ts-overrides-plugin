@@ -1,10 +1,10 @@
 # ts-overrides-plugin
 
-A plugin for `TypeScript` that allows overriding `tsconfig` for specific files
+A plugin for `TypeScript` that allows overriding `tsconfig` and ignoring for specific files
 
-[![typedoc-theme-hierarchy (latest)](https://img.shields.io/npm/v/ts-overrides-plugin)](https://www.npmjs.com/package/ts-overrides-plugin)
-[![typedoc-theme-hierarchy (downloads)](https://img.shields.io/npm/dw/ts-overrides-plugin)](https://www.npmjs.com/package/ts-overrides-plugin)
-[![typedoc-theme-hierarchy (stars)](https://img.shields.io/github/stars/difuks/ts-overrides-plugin?style=social)](https://github.com/DiFuks/ts-overrides-plugin)
+[![ts-overrides-plugin (latest)](https://img.shields.io/npm/v/ts-overrides-plugin)](https://www.npmjs.com/package/ts-overrides-plugin)
+[![ts-overrides-plugin (downloads)](https://img.shields.io/npm/dw/ts-overrides-plugin)](https://www.npmjs.com/package/ts-overrides-plugin)
+[![ts-overrides-plugin (stars)](https://img.shields.io/github/stars/difuks/ts-overrides-plugin?style=social)](https://github.com/DiFuks/ts-overrides-plugin)
 
 ## Why is it needed?
 
@@ -18,6 +18,7 @@ any other cases where you need to override the `tsconfig` settings for specific 
 - Override diagnostics for files in the `IDE`
 - Override type hints when hovering over variables in the `IDE`
 - Override diagnostics for files in `webpack`, `tsc`, and other builders that use `ts-patch`
+- Ignore files from type checking in the `IDE` and builders
 
 
 ## Known issues
@@ -48,6 +49,7 @@ In the `tsconfig.json` file, add:
     "plugins": [
       {
         "name": "ts-overrides-plugin",
+        "ignores": ["src/ignored/**/*.{ts,tsx}"], // Path to files (glob) that should be ignored from type checking. Should not start with './'
         "overrides": [
             {
               "files": ["src/modern/**/*.{ts,tsx}"], // Path to files (glob) for which settings need to be overridden. Should not start with './'
@@ -92,6 +94,7 @@ In the `tsconfig.json` file, add:
         "name": "ts-overrides-plugin",
         "transform": "ts-overrides-plugin",
         "transformProgram": true,
+        "ignores": ["src/ignored/**/*.{ts,tsx}"], // Path to files (glob) that should be ignored from type checking. Should not start with './'
         "overrides": [
           {
             "files": ["src/modern/**/*.{ts,tsx}"], // Path to files (glob) for which settings need to be overridden. Should not start with './'

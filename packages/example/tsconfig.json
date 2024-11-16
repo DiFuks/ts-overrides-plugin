@@ -11,6 +11,7 @@
         "name": "ts-overrides-plugin",
         "transform": "ts-overrides-plugin",
         "transformProgram": true,
+        "ignores": ["src/ignored/**/*.{ts,tsx}"],
         "overrides": [
           {
             "files": ["src/modern/**/*.{ts,tsx}"],

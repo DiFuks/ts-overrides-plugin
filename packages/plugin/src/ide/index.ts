@@ -5,7 +5,8 @@ import type ts from 'typescript/lib/tsserverlibrary';
 import type { Override } from '../types/Override';
 
 interface IdePluginConfig {
-	overrides: Override[];
+	overrides?: Override[];
+	ignores?: string[];
 }
 
 const getOverrideLanguageServices = (
@@ -59,7 +60,8 @@ const getLanguageServiceForFile = (
 
 const plugin: ts.server.PluginModuleFactory = ({ typescript }) => ({
 	create: info => {
-		const { overrides: overridesFromConfig } = info.config as IdePluginConfig;
+		const { overrides: overridesFromConfig = [], ignores } = info.config as IdePluginConfig;
+		const ignoresMatcher = ignores ? outmatch(ignores) : null;
 
 		const docRegistry = typescript.createDocumentRegistry();
 
@@ -84,6 +86,10 @@ const plugin: ts.server.PluginModuleFactory = ({ typescript }) => ({
 
 				if (property === `getSemanticDiagnostics`) {
 					return (fileName => {
+						if (ignoresMatcher?.(relative(info.project.getCurrentDirectory(), fileName))) {
+							return [];
+						}
+
 						const overrideForFile = getLanguageServiceForFile(fileName, overrideLanguageServices, target);
 
 						return overrideForFile.getSemanticDiagnostics(fileName);
