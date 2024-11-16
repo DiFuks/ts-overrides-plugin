@@ -10,6 +10,9 @@ export const getDate = (date) => {
   // 'modern' is possibly 'undefined'
   modern.split('');
 
+  // 'GLOBAL_VAR' correct types
+  GLOBAL_VAR.toLowerCase();
+
   return date.toLocaleDateString('ru-RU', {
     day: 'numeric',
     month: 'long',

@@ -10,6 +10,7 @@ const getOverrideProgram = (
 	override: Override,
 	filesToOriginalDiagnostic: string[],
 	defaultCompilerOptions: ts.CompilerOptions,
+	dTsFiles: string[],
 	host?: ts.CompilerHost,
 ): {
 	overrideProgram: ts.Program;
@@ -21,7 +22,7 @@ const getOverrideProgram = (
 	);
 
 	const overrideProgram = typescript.createProgram(
-		filesToCurrentOverrideDiagnostic,
+		[...filesToCurrentOverrideDiagnostic, ...dTsFiles],
 		{
 			...defaultCompilerOptions,
 			...typescript.convertCompilerOptionsFromJson(override.compilerOptions, rootPath).options,
@@ -64,6 +65,7 @@ export const getOverridePrograms = (
 	filesToOriginalDiagnostic: string[];
 } => {
 	let filesToOriginalDiagnostic: string[] = [...rootFileNames];
+	const dTsFiles = rootFileNames.filter(fileName => fileName.endsWith(`.d.ts`));
 
 	const resultOverrides: ts.Program[] = overridesFromConfig.map(override => {
 		const { overrideProgram, filesToCurrentOverrideDiagnostic } = getOverrideProgram(
@@ -72,6 +74,7 @@ export const getOverridePrograms = (
 			override,
 			filesToOriginalDiagnostic,
 			defaultCompilerOptions,
+			dTsFiles,
 			host,
 		);
 
