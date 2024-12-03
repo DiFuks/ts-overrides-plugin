@@ -74,8 +74,22 @@ const plugin: ts.server.PluginModuleFactory = ({ typescript }) => ({
 
 		const originalLanguageServiceWithDocRegistry = typescript.createLanguageService(info.project, docRegistry);
 
+		const originalProgram = originalLanguageServiceWithDocRegistry.getProgram();
+
+		const originalProgramWithStrictNullChecks = {
+			...originalProgram,
+			getCompilerOptions: () => ({
+				...originalProgram?.getCompilerOptions(),
+				strictNullChecks: true,
+			}),
+		};
+
 		return new Proxy(originalLanguageServiceWithDocRegistry, {
 			get: (target, property: keyof ts.LanguageService) => {
+				if (property === `getProgram`) {
+					return (() => originalProgramWithStrictNullChecks) as ts.LanguageService['getProgram'];
+				}
+
 				if (property === `getQuickInfoAtPosition`) {
 					return ((fileName, position) => {
 						const overrideForFile = getLanguageServiceForFile(fileName, overrideLanguageServices, target);

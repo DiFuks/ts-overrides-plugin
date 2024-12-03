@@ -97,17 +97,6 @@ const plugin: ProgramTransformer = (program, host, pluginConfig, extras) => {
 
 	return new Proxy(program, {
 		get: (target, property: keyof ts.Program) => {
-			if (property === `getCompilerOptions`) {
-				return (() => {
-					const compilerOptions = target.getCompilerOptions();
-
-					return {
-						...compilerOptions,
-						strictNullChecks: true,
-					};
-				}) as ts.Program['getCompilerOptions'];
-			}
-
 			// for watch mode - ForkTsCheckerWebpackPlugin and tspc
 			if (property === `getBindAndCheckDiagnostics`) {
 				return ((sourceFile, cancellationToken) =>
