@@ -6,21 +6,26 @@
     "build:fork-ts": "webpack --config webpack.config.fork-ts.js",
     "watch:tspc": "tspc --watch",
     "watch:ts-loader": "webpack --config webpack.config.ts-loader.js --watch",
-    "watch:fork-ts": "webpack --config webpack.config.fork-ts.js --watch"
+    "watch:fork-ts": "webpack --config webpack.config.fork-ts.js --watch",
+    "lint": "eslint ."
   },
   "devDependencies": {
     "@babel/core": "^7.23.6",
     "@babel/preset-env": "^7.23.6",
     "@babel/preset-typescript": "^7.23.3",
+    "@eslint/js": "^9.16.0",
     "@types/babel__core": "^7",
     "@types/babel__preset-env": "^7",
+    "@typescript-eslint/parser": "^8.17.0",
     "babel-loader": "^9.1.3",
+    "eslint": "^9.16.0",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
     "ts-overrides-plugin": "workspce:*",
     "ts-patch": "3.2.1",
     "typescript": "5.5.2",
+    "typescript-eslint": "^8.17.0",
     "webpack": "^5.96.1",
     "webpack-cli": "^5.1.4"
   },

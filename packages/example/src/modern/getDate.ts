@@ -3,6 +3,9 @@ import { someVar } from '../legacy/getDate';
 // Parameter 'date' implicitly has an 'any' type.
 export const getDate = (date) => {
   const modern: string | undefined = undefined;
+  const alwaysStringVar = 'Some string';
+
+  alwaysStringVar?.toLowerCase();
 
   // Show `string | undefined` on hover in IDE
   console.log(someVar);
