@@ -10,6 +10,10 @@ interface CliPluginConfig extends PluginConfig {
 	ignores?: string[];
 }
 
+type IsMatch = (fileName: string) => boolean;
+
+type OverrideProgram = [IsMatch, ts.Program];
+
 export const getOverridePrograms = (
 	rootPath: string,
 	typescript: typeof ts,
@@ -17,28 +21,24 @@ export const getOverridePrograms = (
 	rootFileNames: readonly string[],
 	defaultCompilerOptions: ts.CompilerOptions,
 	host?: ts.CompilerHost,
-): ts.Program[] => {
-	const dTsFiles = rootFileNames.filter(fileName => fileName.endsWith(`.d.ts`));
-
-	return overridesFromConfig.map(override => {
-		const isMatch = outmatch(override.files);
-		const filesToCurrentOverrideDiagnostic: string[] = rootFileNames.filter(fileName =>
-			isMatch(path.relative(rootPath, fileName)),
-		);
-
-		return typescript.createProgram(
-			[...filesToCurrentOverrideDiagnostic, ...dTsFiles],
+): OverrideProgram[] =>
+	overridesFromConfig.map(override => {
+		const match = outmatch(override.files);
+		const isMatch = (fileName: string): boolean => match(path.relative(rootPath, fileName));
+		const program = typescript.createProgram(
+			rootFileNames,
 			{
 				...defaultCompilerOptions,
 				...typescript.convertCompilerOptionsFromJson(override.compilerOptions, rootPath).options,
 			},
 			host,
 		);
+
+		return [isMatch, program];
 	});
-};
 
 export const getDiagnosticForFile = (
-	overridePrograms: ts.Program[],
+	overridePrograms: OverrideProgram[],
 	target: ts.Program,
 	sourceFile: ts.SourceFile,
 	method: 'getSemanticDiagnostics' | 'getBindAndCheckDiagnostics',
@@ -51,9 +51,7 @@ export const getDiagnosticForFile = (
 
 	const { fileName } = sourceFile;
 
-	const overrideProgramForFile = overridePrograms.find(overrideProgram =>
-		overrideProgram.getRootFileNames().includes(fileName),
-	);
+	const overrideProgramForFile = overridePrograms.find(([isMatch, _overrideProgram]) => isMatch(fileName))?.[1];
 
 	return overrideProgramForFile
 		? overrideProgramForFile[method](sourceFile, cancellationToken)
@@ -62,7 +60,7 @@ export const getDiagnosticForFile = (
 
 export const getDiagnosticsForProject = (
 	program: ts.Program,
-	overridePrograms: ts.Program[],
+	overridePrograms: OverrideProgram[],
 	ignoreMatcher: ((fileName: string) => boolean) | null,
 	cancellationToken?: ts.CancellationToken,
 ): ts.Diagnostic[] =>
