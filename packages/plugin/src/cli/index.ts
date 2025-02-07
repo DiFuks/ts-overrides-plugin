@@ -51,7 +51,7 @@ export const getDiagnosticForFile = (
 
 	const { fileName } = sourceFile;
 
-	const overrideProgramForFile = overridePrograms.find(([isMatch, _overrideProgram]) => isMatch(fileName))?.[1];
+	const overrideProgramForFile = overridePrograms.find(([isMatch]) => isMatch(fileName))?.[1];
 
 	return overrideProgramForFile
 		? overrideProgramForFile[method](sourceFile, cancellationToken)
