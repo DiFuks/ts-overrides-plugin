@@ -4,6 +4,10 @@ import type ts from 'typescript/lib/tsserverlibrary';
 
 import type { Override } from '../types/Override';
 
+type IsMatch = (fileName: string) => boolean;
+
+type OverrideLanguageService = [IsMatch, ts.LanguageService];
+
 interface IdePluginConfig {
 	overrides?: Override[];
 	ignores?: string[];
@@ -14,8 +18,10 @@ const getOverrideLanguageServices = (
 	overridesFromConfig: Override[],
 	project: ts.server.Project,
 	docRegistry: ts.DocumentRegistry,
-): ts.LanguageService[] =>
+): OverrideLanguageService[] =>
 	[...overridesFromConfig].reverse().map(override => {
+		const match = outmatch(override.files);
+
 		const overrideLanguageServiceHost: ts.LanguageServiceHost = {
 			fileExists: path => project.fileExists(path),
 			getCurrentDirectory: () => project.getCurrentDirectory(),
@@ -28,28 +34,21 @@ const getOverrideLanguageServices = (
 				...typescript.convertCompilerOptionsFromJson(override.compilerOptions, project.getCurrentDirectory())
 					.options,
 			}),
-			getScriptFileNames: () => {
-				const originalFiles = project.getScriptFileNames();
-				const isMatch = outmatch(override.files);
-
-				return originalFiles.filter(
-					fileName =>
-						fileName.endsWith(`.d.ts`) || isMatch(relative(project.getCurrentDirectory(), fileName)),
-				);
-			},
+			getScriptFileNames: () => project.getScriptFileNames(),
 		};
 
-		return typescript.createLanguageService(overrideLanguageServiceHost, docRegistry);
+		const languageService = typescript.createLanguageService(overrideLanguageServiceHost, docRegistry);
+		const isMatch = (fileName: string): boolean => match(relative(project.getCurrentDirectory(), fileName));
+
+		return [isMatch, languageService];
 	});
 
 const getLanguageServiceForFile = (
 	fileName: string,
-	overrideLanguageServices: ts.LanguageService[],
+	overridesInfo: OverrideLanguageService[],
 	originalLanguageService: ts.LanguageService,
 ): ts.LanguageService => {
-	const overrideForFile = overrideLanguageServices.find(override =>
-		override.getProgram()?.getRootFileNames().includes(fileName),
-	);
+	const overrideForFile = overridesInfo.find(([isMatch]) => isMatch(fileName))?.[1];
 
 	if (overrideForFile) {
 		return overrideForFile;
