@@ -140,13 +140,13 @@ For `ForkTsCheckerWebpackPlugin` in the `webpack.config.js` file, add:
 const path = require('path');
 
 module.exports = {
-	plugins: [
-		new ForkTsCheckerWebpackPlugin({
-			typescript: {
-				typescriptPath: require.resolve('ts-patch/compiler'),
-			}
-		}),
-	],
+  plugins: [
+    new ForkTsCheckerWebpackPlugin({
+      typescript: {
+        typescriptPath: require.resolve('ts-patch/compiler'),
+      }
+    }),
+  ],
 };
 ```
 
@@ -156,17 +156,17 @@ For `ts-loader` in the `webpack.config.js` file, add:
 const path = require('path');
 
 module.exports = {
-	module: {
-		rules: [
-			{
-				test: /\.ts$/,
-				exclude: /node_modules/,
-				loader: 'ts-loader',
-				options: {
-					compiler: require.resolve('ts-patch/compiler'),
-				}
-			},
-		],
-	},
+  module: {
+    rules: [
+      {
+        test: /\.ts$/,
+        exclude: /node_modules/,
+        loader: 'ts-loader',
+        options: {
+          compiler: require.resolve('ts-patch/compiler'),
+        }
+      },
+    ],
+  },
 };
 ```

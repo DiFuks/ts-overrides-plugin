@@ -85,5 +85,5 @@ jobs:
           skipIfReleaseExists: true
           makeLatest: true
           name: Release ${{ steps.package-version.outputs.current-version }}
-          body: ${{ steps.pull-request-info.outputs.body }}
+          body: ${{ steps.pull-request-info.outputs.body || github.event.head_commit.message }}
           tag: v${{ steps.package-version.outputs.current-version }}
